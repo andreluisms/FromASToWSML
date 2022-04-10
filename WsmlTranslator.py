@@ -135,7 +135,7 @@ class WsmlTranslator(AbstractVisitor):
         pass
 
     def visitSingleParameter(self, singleParam):
-        pass
+        pass 
 
     def visitAccessExp(self, accessExp):
         if isinstance(accessExp.name, sa.SelfExp):
