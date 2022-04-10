@@ -2,7 +2,9 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    COMMENT
     IF
+    IMPORT
     LCHAV
     PV
     RCHAV
@@ -60,12 +62,14 @@ Terminals, with rules where they appear
 
 CLASS                : 1 2 3 4 5 6
 COMMA                : 17 18 44
+COMMENT              : 
 DEF                  : 13 14
 DP                   : 1 2 3 4 5 6 13 14 23
 FALSE                : 38
 ID                   : 1 1 1 2 2 3 4 4 4 5 5 6 11 13 14 15 17 36 40 42 43
 IF                   : 
 IGUAL                : 1 4 11 26
+IMPORT               : 
 LCHAV                : 
 LPAREN               : 1 2 4 5 13 14 42 43
 NUMBER               : 35

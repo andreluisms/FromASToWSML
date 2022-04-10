@@ -14,7 +14,7 @@ reservadas = {
    'self': 'SELF'
 }
 tokens = ['COMMA', 'SOMA', 'ID', 'NUMBER', 'VEZES', 'POT', 'LPAREN',
-          'RPAREN', 'IGUAL', 'LCHAV', 'RCHAV', 'PV', 'P','DP' ] + list(reservadas.values())
+          'RPAREN', 'IGUAL', 'LCHAV', 'RCHAV', 'PV', 'P','DP', 'COMMENT', 'IMPORT' ] + list(reservadas.values())
 
 t_IGUAL= r'='
 t_P = r'\.'
@@ -29,10 +29,18 @@ t_RCHAV = r'}'
 t_PV = r';'
 t_DP = r':'
 
+def t_IMPORT(t):
+   r'(from (.)*) |(import (.)*)'
+   pass 
+
 def t_ID(t):
    r'[a-zA-Z_][a-zA-Z_0-9]*'
    t.type = reservadas.get(t.value,'ID')
    return t
+
+def t_COMMENT(t):
+   r'(\'\'\' (.|\n)*? \'\'\') | (\#(.)*)'
+   pass
 
 def t_NUMBER(t):
    r'\d+'
@@ -44,6 +52,8 @@ def t_newline(t):
    t.lexer.lineno += len(t.value)
 
 t_ignore = ' \t'
+
+
 
 def t_error(t):
    print("Illegal character '%s'" % t.value[0])
