@@ -4,63 +4,72 @@ from abc import ABCMeta
 class AbstractVisitor(metaclass=ABCMeta):
 
     @abstractmethod
-    def visitProgramConcrete(self, funcDecl):
+    def visitSingleClass(self, singleClass):
         pass
 
     @abstractmethod
-    def visitClassBodyConcrete(self, funcDecl):
+    def visitCompoundClass(self, compoundClass):
         pass
 
     @abstractmethod
-    def visitSingleDecl(self, funcDecl):
+    def visitClassBody(self, bodyConcrete):
         pass
 
     @abstractmethod
-    def visitCompoundDecl(self, funcDecl):
+    def visitSingleDeclaration(self, singleDecl):
         pass
 
     @abstractmethod
-    def visitAttributeDef(self, funcDecl):
+    def visitCompoundDeclaration(self, compoundDecl):
         pass
 
     @abstractmethod
-    def visitFuncDeclConcrete(self, funcDecl):
+    def visitAttributeDeclaration(self, attributeDecl):
         pass
 
     @abstractmethod
-    def visitSignatureConcrete(self, signature):
+    def visitFunctionDeclaration(self, funcDecl):
         pass
 
     @abstractmethod
-    def visitSingleSigParams(self, singleSigParams):
+    def visitSignature(self, signature):
         pass
 
     @abstractmethod
-    def visitCompoundSigParams(self, compoundSigParams):
+    def visitSingleSigParameter(self, singleSigParams):
         pass
 
     @abstractmethod
-    def visitBodyConcrete(self, body):
+    def visitCompoundSigParameter(self, compoundSigParams):
         pass
 
     @abstractmethod
-    def visitSingleStm(self, singlestm):
+    def visitBody(self, body):
         pass
 
     @abstractmethod
-    def visitCompoundStm(self, compoundStm):
+    def visitSingleStatement(self, singlestm):
         pass
 
     @abstractmethod
-    def visitStmExp(self, stmExp):
+    def visitCompoundStatement(self, compoundStm):
         pass
 
     @abstractmethod
-    def visitStmWhile(self, stmWhile):
+    def visitExpressionStm(self, stmExp):
         pass
 
     @abstractmethod
-    def visitStmReturn(self, stmReturn):
+    def visitWhileStm(self, stmWhile):
+        pass
+
+    @abstractmethod
+    def visitReturnStm(self, stmReturn):
+        pass
+
+
+    @abstractmethod
+    def visitPassStm(self, passStm):
         pass
 
     @abstractmethod
@@ -92,21 +101,30 @@ class AbstractVisitor(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def visitSelfExp(self, selfExp):
+        pass
+
+
+    @abstractmethod
     def visitBooleanExp(self, booleanExp):
         pass
 
     @abstractmethod
-    def visitParamsCall(self, paramsCall):
+    def visitAccessExp(self, accessExp):
         pass
 
     @abstractmethod
-    def visitNoParamsCall(self, simpleCall):
+    def visitCallWithParameters(self, paramsCall):
         pass
 
     @abstractmethod
-    def visitCompoundParams(self, compoundParams):
+    def visitCallWithoutParameters(self, simpleCall):
         pass
 
     @abstractmethod
-    def visitSingleParam(self, singleParam):
+    def visitCompoundParameter(self, compoundParams):
+        pass
+
+    @abstractmethod
+    def visitSingleParameter(self, singleParam):
         pass

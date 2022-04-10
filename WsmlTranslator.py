@@ -5,153 +5,142 @@ import SintaxeAbstrata as sa
 class WsmlTranslator(AbstractVisitor):
     # def __init__(self):
     #     self.printer = Visitor()
-    self.counter = 0
+    counter = 0
     
-    def prTab():
+    def prTab(self):
         for a in range(self.counter):
             print(' ', end='')
 
-    def incTab():
+    def incTab(self):
         self.counter += 3
 
-    def decTab():
+    def decTab(self):
         self.counter -= 3 
+
+    
+    def visitPassStm(self, passStm):
+        pass
 
     def visitSingleClass(self, singleClass):
         print("concept ", singleClass.className, end='')
         if singleClass.fatherName != None:
-            print("subConceptOf ", singleClass.fatherName, end='')
-        incTab()
+            print(" subConceptOf", singleClass.fatherName, end='')
+        self.incTab()
         singleClass.classBody.accept(self)
+        print('')
+        self.decTab()
     
     def visitCompoundClass(self, CompoundClass):
         print("concept ", CompoundClass.className, end='')
-        if singleClass.fatherName != None:
-            print("subConceptOf ", CompoundClass.fatherName, end='')
-        incTab()
+        if CompoundClass.fatherName != None:
+            print(" subConceptOf", CompoundClass.fatherName, end='')
+        self.incTab()
         CompoundClass.classBody.accept(self)
+        print('')
+        print('')
+        self.decTab()
         CompoundClass.classes.accept(self)
         
+        
 
-    def visitClassBodyConcrete(self, funcDecl):
+    def visitClassBody(self, classBody):
+        classBody.declarations.accept(self)
+
+    def visitSingleDeclaration(self, singleDeclaration):
+        singleDeclaration.declaration.accept(self)
+
+    def visitCompoundDeclaration(self, compoundDeclaration):
+        compoundDeclaration.declaration.accept(self)
+        compoundDeclaration.declarations.accept(self)
+
+    def visitAttributeDeclaration(self, attributeDeclaration):
         pass
 
-    def visitSingleDecl(self, funcDecl):
+    def visitFunctionDeclaration(self, functionDeclaration):
+       #functionDeclaration.signature.accept(self)
+       functionDeclaration.functionBody.accept(self)
+
+    def visitSignature(self, signature):
         pass
 
-    def visitCompoundDecl(self, funcDecl):
+    def visitSingleSigParameter(self, singleSigParameter):
         pass
 
-    def visitAttributeDef(self, funcDecl):
+    def visitCompoundSigParameter(self, compoundSigParameter):
         pass
 
-    def visitFuncDeclConcrete(self, funcDeclConcrete):
-        funcDeclConcrete.signature.accept(self)
-        funcDeclConcrete.body.accept(self)
+    def visitBody(self, body):
+        if (body.statements != None):
+            body.statements.accept(self)
 
-    def visitSignatureConcrete(self, signatureConcrete):
-        print (blank(), signatureConcrete.type, ' ', end='', sep='')
-        print(signatureConcrete.id, '(', end = '', sep='')
-        if (signatureConcrete.sigParams != None):
-            signatureConcrete.sigParams.accept(self)
-        print(')', end = '')
+    def visitSingleStatement(self, singleStatement):
+        singleStatement.statement.accept(self)
 
-    def visitSingleSigParams(self, singleSigParams):
-        print(singleSigParams.type, ' ', end='', sep='')
-        print(singleSigParams.id, end='', sep='')
+    def visitCompoundStatement(self, compoundStatement):
+        compoundStatement.statement.accept(self)
+        compoundStatement.statements.accept(self)
 
-    def visitCompoundSigParams(self, compoundSigParams):
-        print(compoundSigParams.type, ' ', end='', sep='')
-        print(compoundSigParams.id, ', ', end='', sep='')
-        compoundSigParams.sigParams.accept(self)
+    def visitExpressionStm(self, expressionStm):
+        expressionStm.expression.accept(self)
 
-    def visitBodyConcrete(self, bodyConcrete):
-        global tab
-        print ('{ ')
-        tab =  tab + 3
-        if (bodyConcrete.stms != None):
-            bodyConcrete.stms.accept(self)
-        tab =  tab - 3
-        print (blank(), '} ', sep='')
 
-    def visitSingleStm(self, singleStm):
-        singleStm.stm.accept(self)
+    def visitWhileStm(self, stmWhile):
+       pass
 
-    def visitCompoundStm(self, compoundStm):
-        compoundStm.stm.accept(self)
-        compoundStm.stms.accept(self)
-
-    def visitStmExp(self, stmExp):
-        print(blank(),sep='',end='')
-        stmExp.exp.accept(self)
-        print('')
-
-    def visitStmWhile(self, stmWhile):
-        print (blank(), 'while (', end='', sep='')
-        stmWhile.exp.accept(self)
-        print (')', end='', sep='')
-        stmWhile.block.accept(self)
-
-    def visitStmReturn(self, stmReturn):
-        print (blank(), 'return ', end='', sep='')
-        stmReturn.exp.accept(self)
-        print (';')
+    def visitReturnStm(self, stmReturn):
+       pass
 
     def visitAssignExp(self, assignExp):
-        # print("visitAssignExp")
-        assignExp.exp1.accept(self)
-        print(' = ', end='')
-        assignExp.exp2.accept(self)
+        print('')
+        self.prTab()
+        assignExp.leftExpression.accept(self)
+        print(' ofType ', end='')
+        assignExp.rightExpression.accept(self)
 
     def visitSomaExp(self, somaExp):
-        # print("visitSomaExp")
-        somaExp.exp1.accept(self)
-        print(' + ', end='')
-        somaExp.exp2.accept(self)
+        pass
 
     def visitMulExp(self, mulExp):
-        # print("visitMulExp")
-        mulExp.exp1.accept(self)
-        print(' * ', end='')
-        mulExp.exp2.accept(self)
+        pass
 
     def visitPotExp(self, potExp):
-        # print("visitPotExp")
-        potExp.exp1.accept(self)
-        print(' ^ ', end='')
-        potExp.exp2.accept(self)
+        pass
 
     def visitCallExp(self, callExp):
-        # print("visitCallExp")
-        callExp.call.accept(self)
+        pass
 
     def visitNumExp(self, numExp):
-        # print("visitNumExp")
-        print(numExp.num, end='')
+        pass
 
     def visitIdExp(self, idExp):
-        # print("visitIdExp")
-        print(idExp.id, end='')
+        p = idExp.id
+        if (p[len(p)-1].isdigit()):
+            print(p[:-1], end='')
+        else:
+            print(p, end='')
 
     def visitBooleanExp(self, booleanExp):
-        print(booleanExp.boolValue, end='')
+        pass
+    
+    def visitSelfExp(self, selfExp):
+        pass
 
-    def visitParamsCall(self, paramsCall):
-        # print("visitParamsCall")
-        print(paramsCall.id, '(', end='', sep='')
-        paramsCall.params.accept(self)
-        print(')', end='')
+    def  visitCallWithParameters(self, paramsCall):
+        pass
 
-    def visitNoParamsCall(self, simpleCall):
-        # print("visitSimpleCall")
-        print(blank(), simpleCall.id, '()', end='', sep='')
+    def  visitCallWithoutParameters(self, simpleCall):
+        pass
 
-    def visitCompoundParams(self, compoundParams):
-        # print("visitCompoundParams")
-        compoundParams.exp.accept(self)
-        print(', ', end='')
-        compoundParams.params.accept(self)
+    def visitCompoundParameter(self, compoundParams):
+        pass
 
-    def visitSingleParam(self, singleParam):
-        # print("visitSingleParam")
-        singleParam.exp.accept(self)
+    def visitSingleParameter(self, singleParam):
+        pass
+
+    def visitAccessExp(self, accessExp):
+        if isinstance(accessExp.name, sa.SelfExp):
+            accessExp.expression.accept(self)
+        else:
+            print(accessExp.name)
+                
+        

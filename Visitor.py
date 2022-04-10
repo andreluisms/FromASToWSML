@@ -10,9 +10,6 @@ def blank():
 
 class Visitor(AbstractVisitor):
 
-
-
-
     def visitFuncDeclConcrete(self, funcDeclConcrete):
         funcDeclConcrete.signature.accept(self)
         funcDeclConcrete.body.accept(self)

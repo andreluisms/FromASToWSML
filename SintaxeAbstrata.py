@@ -6,132 +6,117 @@ from Visitor import Visitor
 Programa
 '''
 class Program:
-    @abstractmethod
     def accept(self, visitor):
         pass
 
 class SingleClass(Program):
-    def __init__(self, className, fatherName, classBody):
-        self.className = className
-        self.fatherName = fatherName
-        self.classBody = classBody
+    def __init__(self, ID1, ID2, ClassBody):
+        self.className = ID1
+        self.fatherName = ID2 
+        self.classBody = ClassBody
     def accept(self, visitor):
-        pass
+        return visitor.visitSingleClass(self)
 
 
 class CompoundClass(Program):
-    def __init__(self, className, fatherName, classBody, classes):
-        self.className = className
-        self.fatherName = fatherName
-        self.classBody = classBody
-        self.classes = classes
+    def __init__(self, ID1, ID2, ClassBody, Program):
+        self.className = ID1
+        self.fatherName = ID2
+        self.classBody = ClassBody
+        self.classes = Program
     def accept(self, visitor):
-        pass
+        return visitor.visitCompoundClass(self)
 
 
 '''
 ClassBody
 '''
+
 class ClassBody:
-    @abstractmethod
+    def __init__(self, Declarations):
+        self.declarations = Declarations
     def accept(self, visitor):
-        pass
-
-
-class ClassBodyConcrete(ClassBody):
-    def __init__(self, decls):
-        self.decls = decls
-    def accept(self, visitor):
-        pass
+        return visitor.visitClassBody(self)
 
 
 '''
-decls
+Declarations
 '''
-class Decls:
-    @abstractmethod
+class Declarations:
     def accept(self, visitor):
         pass
 
 
-class SingleDecl(Decls):
-    def __init__(self, decl):
-        self.decl = decl
+class SingleDeclaration(Declarations):
+    def __init__(self, Declaration):
+        self.declaration = Declaration
     def accept(self, visitor):
-        pass
+        return visitor.visitSingleDeclaration(self)
 
 
-class CompoundDecl(Decls):
-    def __init__(self, decl, decls):
-        self.decl = decl
-        self.decls = decls
+class CompoundDeclaration(Declarations):
+    def __init__(self, Declaration, Declarations):
+        self.declaration = Declaration
+        self.declarations = Declarations
     def accept(self, visitor):
-        pass
+        return visitor.visitCompoundDeclaration(self)
 
 
 '''
 Declaracao de funcao
 FuncDecl
 '''
-class AttributeDef:
-    def __init__(self, ID, exp):
-         self.ID = ID
-         self.exp = exp
+
+class Declaration:
     def accept(self, visitor):
         pass
 
-class FuncDecl:
-    @abstractmethod
+class AttributeDeclaration(Declaration):
+    def __init__(self, ID, Expression):
+         self.nameAttribute = ID
+         self.expression = Expression
     def accept(self, visitor):
-        pass
+        return visitor.visitAttributeDeclaration(self)
 
-class FuncDeclConcrete(FuncDecl):
-    def __init__(self, signature, body):
-        self.signature = signature
-        self.body = body
+class FunctionDeclaration(Declaration):
+    def __init__(self, Signature, Body):
+        self.signature = Signature
+        self.functionBody = Body
     def accept(self, visitor):
-        return visitor.visitFuncDeclConcrete(self)
+        return visitor.visitFunctionDeclaration(self)
 
 '''
 Assinatura de funcao
 Signature
 '''
 class Signature:
-    @abstractmethod
+    def __init__(self, ID, Parameters):
+        self.nameFunction = ID
+        self.parameters = Parameters
     def accept(self, visitor):
-        pass
-
-
-class SignatureConcrete(Signature):
-    def __init__(self, type, id, sigParams):
-        self.type = type
-        self.id = id
-        self.sigParams = sigParams
-    def accept(self, visitor):
-        return visitor.visitSignatureConcrete(self)
+        return visitor.visitSignature(self)
 '''
 Parametros de assinatura de funcao
 SigParams
 '''
 
-class SigParams:
-    @abstractmethod
+class SigParameters:
     def accept(self, visitor):
         pass
 
-class SingleSigParams(SigParams):
-    def __init__(self, id):
-        self.id = id
+class SingleSigParameter(SigParameters):
+    def __init__(self, ID):
+        self.nameParameter = ID
     def accept(self, visitor):
-        return visitor.visitSingleSigParams(self)
+        return visitor.visitSingleSigParameter(self)
 
 
-class CompoundSigParams(SigParams):
-    def __init__(self, id, sigParams):
-        self.id = id
-        self.sigParams = sigParams
+class CompoundSigParameter(SigParameters):
+    def __init__(self, ID, SigParameters):
+        self.nameParameter = ID
+        self.parameters = SigParameters
     def accept(self, visitor):
-        return visitor.visitCompoundSigParams(self)
+        return visitor.visitCompoundSigParameter(self)
 
 '''
 Corpo de uma funcao
@@ -139,177 +124,184 @@ Body
 '''
 
 class Body:
-    @abstractmethod
+    def __init__(self, Statements):
+        self.statements = Statements
     def accept(self, visitor):
-        pass
-
-
-class BodyConcrete(Body):
-    def __init__(self, stms):
-        self.stms = stms
-    def accept(self, visitor):
-        return visitor.visitBodyConcrete(self)
+        return visitor.visitBody(self)
 
 '''
 Comandos
 Stms
 '''
 
-class Stms:
-    @abstractmethod
+class Statements:
     def accept(self, visitor):
         pass
 
-class SingleStm(Stms):
-    def __init__(self, stm):
-        self.stm = stm
+class SingleStatement(Statements):
+    def __init__(self, Statement):
+        self.statement = Statement
     def accept(self, visitor):
-        return visitor.visitSingleStm(self)
+        return visitor.visitSingleStatement(self)
 
-class CompoundStm(Stms):
-    def __init__(self, stm, stms):
-        self.stm = stm
-        self.stms = stms
+class CompoundStatement(Statements):
+    def __init__(self, Statement, Statements):
+        self.statement = Statement
+        self.statements = Statements
     def accept(self, visitor):
-        return visitor.visitCompoundStm(self)
+        return visitor.visitCompoundStatement(self)
 
 '''
 Comando
 Stm
 '''
 
-class Stm:
-    @abstractmethod
+class Statement:
     def accept(self, visitor):
         pass
 
-class StmExp(Stm):
-    def __init__(self, exp):
-        self.exp = exp
+class ExpressionStm(Statement):
+    def __init__(self, Expression):
+        self.expression = Expression
     def accept(self, visitor):
-        return visitor.visitStmExp(self)
+        return visitor.visitExpressionStm(self)
 
-class StmWhile(Stm):
-    def __init__(self, exp, block):
-        self.exp = exp
-        self.block = block
+class WhileStm(Statement):
+    def __init__(self, Expression, Body):
+        self.expression = Expression
+        self.block = Body
     def accept(self, visitor):
-        return visitor.visitStmWhile(self)
+        return visitor.visitWhileStm(self)
 
-class StmReturn(Stm):
-    def __init__(self, exp):
-        self.exp = exp
+class ReturnStm(Statement):
+    def __init__(self, Expression):
+        self.expression = Expression
     def accept(self, visitor):
-        return visitor.visitStmReturn(self)
+        return visitor.visitReturnStm(self)
+
+class PassStm(Statement):
+    def accept(self, visitor):
+        return visitor.visitPassStm(self)
 
 '''
 Expressoes
 Exp
 '''
 
-class Exp:
-    @abstractmethod
+class Expression:
     def accept(self, visitor):
         pass
 
-class AssignExp(Exp):
-    def __init__(self, exp1, exp2):
-        self.exp1 = exp1
-        self.exp2 = exp2
+class AssignExp(Expression):
+    def __init__(self, Expression1, Expression2):
+        self.leftExpression = Expression1
+        self.rightExpression = Expression2
     def accept(self, visitor):
         return visitor.visitAssignExp(self)
 
-class SomaExp(Exp):
-    def __init__(self, exp1, exp2):
-        self.exp1 = exp1
-        self.exp2 = exp2
+class SomaExp(Expression):
+    def __init__(self, Expression1, Expression2):
+        self.leftExpression = Expression1
+        self.rightExpression = Expression2
     def accept(self, visitor):
         return visitor.visitSomaExp(self)
 
 
-class MulExp(Exp):
-    def __init__(self, exp1, exp2):
-        self.exp1 = exp1
-        self.exp2 = exp2
+class MulExp(Expression):
+    def __init__(self, Expression1, Expression2):
+        self.leftExpression = Expression1
+        self.rightExpression = Expression2
     def accept(self, visitor):
         return visitor.visitMulExp(self)
 
 
-class PotExp(Exp):
-    def __init__(self, exp1, exp2):
-        self.exp1 = exp1
-        self.exp2 = exp2
+class PotExp(Expression):
+    def __init__(self, Expression1, Expression2):
+        self.leftExpression = Expression1
+        self.rightExpression = Expression2
     def accept(self, visitor):
         return visitor.visitPotExp(self)
 
 
-class CallExp(Exp, Stm):
-    def __init__(self, call):
-        self.call = call
+class CallExp(Expression):
+    def __init__(self, Call):
+        self.call = Call
 
     def accept(self, visitor):
         return visitor.visitCallExp(self)
 
-class NumExp(Exp):
-    def __init__(self, num):
-        self.num = num
+class NumExp(Expression):
+    def __init__(self, Number):
+        self.number = Number
     def accept(self, visitor):
         return visitor.visitNumExp(self)
 
 
-class IdExp(Exp):
-    def __init__(self, id):
-        self.id = id
+class IdExp(Expression):
+    def __init__(self, ID):
+        self.id = ID
     def accept(self, visitor):
         return visitor.visitIdExp(self)
 
-class BooleanExp(Exp):
-    def __init__(self, boolValue):
-        self.boolValue = boolValue
+
+class SelfExp(Expression):
+    def __init__(self, ID):
+        self.id = ID
+    def accept(self, visitor):
+        return visitor.visitSelfExp(self)
+
+class BooleanExp(Expression):
+    def __init__(self, BoolValue):
+        self.boolValue = BoolValue
     def accept(self, visitor):
         return visitor.visitBooleanExp(self)
+
+class AccessExp(Expression):
+    def __init__(self, name, Expression):
+        self.name = name
+        self.expression = Expression
+    def accept(self, visitor):
+        return visitor.visitAccessExp(self)
 
 '''
 Chamada de funcao
 Call
 '''
 class Call:
-    @abstractmethod
     def accept(self, visitor):
         pass
 
-class ParamsCall(Call):
-    def __init__ (self, id, params):
-        self.id = id
-        self.params = params
+class CallWithParameters(Call):
+    def __init__ (self, ID, Parameters):
+        self.nameFunction = ID
+        self.parameters = Parameters
     def accept(self, visitor):
-        return visitor.visitParamsCall(self)
+        return visitor.visitCallWithParameters(self)
 
-class NoParamsCall(Call):
-    def __init__(self, id):
-        self.id = id
+class CallWithoutParameters(Call):
+    def __init__(self, ID):
+        self.nameFunction = ID
     def accept(self, visitor):
-        return visitor.visitNoParamsCall(self)
+        return visitor.visitCallWithoutParameters(self)
 
 
 '''
 Parametros de uma chamada de funcao
 Params
 '''
-class Params:
-    @abstractmethod
+class Parameters:
     def accept(self, visitor):
         pass
 
-class CompoundParams(Params):
-    def __init__(self, exp, params):
-        self.exp = exp
-        self.params = params
+class CompoundParameter(Parameters):
+    def __init__(self, Expression, Parameters):
+        self.expression = Expression
+        self.parameters = Parameters
     def accept(self, visitor):
-        return visitor.visitCompoundParams(self)
+        return visitor.visitCompoundParameter(self)
 
-class SingleParam(Params):
-    def __init__(self, exp):
-        self.exp = exp
+class SingleParameter(Parameters):
+    def __init__(self, Expression):
+        self.expression = Expression
     def accept(self, visitor):
-        return visitor.visitSingleParam(self)
+        return visitor.visitSingleParameter(self)
