@@ -5,8 +5,8 @@ import ply.lex as lex
 reservadas = {
    'while' : 'WHILE',
    'if' : 'IF',
-   'true' : 'TRUE',
-   'false' : 'FALSE',
+   'True' : 'TRUE',
+   'False' : 'FALSE',
    'return' : 'RETURN',
    'class'  : 'CLASS',
    'def'    : 'DEF',
@@ -14,7 +14,7 @@ reservadas = {
    'self': 'SELF'
 }
 tokens = ['COMMA', 'SOMA', 'ID', 'NUMBER', 'VEZES', 'POT', 'LPAREN',
-          'RPAREN', 'IGUAL', 'LCHAV', 'RCHAV', 'PV', 'P','DP', 'COMMENT', 'IMPORT' ] + list(reservadas.values())
+          'RPAREN', 'IGUAL', 'LCHAV', 'RCHAV', 'PV', 'P','DP'] + list(reservadas.values())
 
 t_IGUAL= r'='
 t_P = r'\.'

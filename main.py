@@ -1,5 +1,5 @@
 from ExpressionLanguageParser import *
-import WsmlTranslator as av
+import WsmlASTranslator as av
 
 data=''
 with open('SintaxeAbstrata.py') as f:
@@ -14,5 +14,5 @@ parser = yacc.yacc()
 result = parser.parse(debug=False)
 
 
-visitor = av.WsmlTranslator()
+visitor = av.WsmlASTranslator()
 result.accept(visitor)

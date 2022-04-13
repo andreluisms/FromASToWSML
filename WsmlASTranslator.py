@@ -2,7 +2,7 @@ from AbstractVisitor import AbstractVisitor
 from Visitor import Visitor
 import SintaxeAbstrata as sa
 
-class WsmlTranslator(AbstractVisitor):
+class WsmlASTranslator(AbstractVisitor):
     # def __init__(self):
     #     self.printer = Visitor()
     counter = 0
