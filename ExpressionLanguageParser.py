@@ -117,6 +117,8 @@ def p_stm4(p):
     ''' stm : PASS '''
     p[0] = sa.PassStm()
 
+
+
 def p_exp_assign(p):
     ''' exp :    exp IGUAL exp1
               | exp1'''
