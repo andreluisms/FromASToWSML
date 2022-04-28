@@ -9,6 +9,7 @@ class Program:
     def accept(self, visitor):
         pass
 
+
 class SingleClass(Program):
     def __init__(self, ID1, ID2, ClassBody):
         self.className = ID1
@@ -226,7 +227,6 @@ class PotExp(Expression):
 class CallExp(Expression):
     def __init__(self, Call):
         self.call = Call
-
     def accept(self, visitor):
         return visitor.visitCallExp(self)
 

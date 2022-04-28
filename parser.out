@@ -3,9 +3,13 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     IF
+    LBRACKETS
     LCHAV
+    LESS
     PV
+    RBRACKETS
     RCHAV
+    STRING
 
 Grammar
 
@@ -16,7 +20,7 @@ Rule 3     program -> CLASS ID DP classbody
 Rule 4     program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program
 Rule 5     program -> CLASS ID LPAREN ID RPAREN DP classbody program
 Rule 6     program -> CLASS ID DP classbody program
-Rule 7     classbody -> decls
+Rule 7     classbody -> NEWLINE IDENT decls DEDENT
 Rule 8     decls -> decl decls
 Rule 9     decls -> decl
 Rule 10    decl -> funcdecl
@@ -28,9 +32,9 @@ Rule 15    sigparams -> ID
 Rule 16    sigparams -> SELF
 Rule 17    sigparams -> ID COMMA sigparams
 Rule 18    sigparams -> SELF COMMA sigparams
-Rule 19    body -> stms
-Rule 20    stms -> stm
-Rule 21    stms -> stm stms
+Rule 19    body -> NEWLINE IDENT stms DEDENT
+Rule 20    stms -> stm NEWLINE
+Rule 21    stms -> stm NEWLINE stms
 Rule 22    stm -> exp
 Rule 23    stm -> WHILE exp DP body
 Rule 24    stm -> RETURN exp
@@ -60,24 +64,31 @@ Terminals, with rules where they appear
 
 CLASS                : 1 2 3 4 5 6
 COMMA                : 17 18 44
+DEDENT               : 7 19
 DEF                  : 13 14
 DP                   : 1 2 3 4 5 6 13 14 23
 FALSE                : 38
 ID                   : 1 1 1 2 2 3 4 4 4 5 5 6 11 13 14 15 17 36 40 42 43
+IDENT                : 7 19
 IF                   : 
 IGUAL                : 1 4 11 26
+LBRACKETS            : 
 LCHAV                : 
+LESS                 : 
 LPAREN               : 1 2 4 5 13 14 42 43
+NEWLINE              : 7 19 20 21
 NUMBER               : 35
 P                    : 40 41
 PASS                 : 25
 POT                  : 32
 PV                   : 
+RBRACKETS            : 
 RCHAV                : 
 RETURN               : 24
 RPAREN               : 1 2 4 5 13 14 42 43
 SELF                 : 16 18 39 41
 SOMA                 : 28
+STRING               : 
 TRUE                 : 37
 VEZES                : 30
 WHILE                : 23
@@ -164,23 +175,11 @@ state 5
 
     (3) program -> CLASS ID DP . classbody
     (6) program -> CLASS ID DP . classbody program
-    (7) classbody -> . decls
-    (8) decls -> . decl decls
-    (9) decls -> . decl
-    (10) decl -> . funcdecl
-    (11) decl -> . ID IGUAL exp
-    (12) funcdecl -> . signature body
-    (13) signature -> . DEF ID LPAREN sigparams RPAREN DP
-    (14) signature -> . DEF ID LPAREN RPAREN DP
+    (7) classbody -> . NEWLINE IDENT decls DEDENT
 
-    ID              shift and go to state 7
-    DEF             shift and go to state 13
+    NEWLINE         shift and go to state 8
 
-    classbody                      shift and go to state 8
-    decls                          shift and go to state 9
-    decl                           shift and go to state 10
-    funcdecl                       shift and go to state 11
-    signature                      shift and go to state 12
+    classbody                      shift and go to state 7
 
 state 6
 
@@ -189,18 +188,11 @@ state 6
     (4) program -> CLASS ID LPAREN ID . IGUAL ID RPAREN DP classbody program
     (5) program -> CLASS ID LPAREN ID . RPAREN DP classbody program
 
-    IGUAL           shift and go to state 14
-    RPAREN          shift and go to state 15
+    IGUAL           shift and go to state 9
+    RPAREN          shift and go to state 10
 
 
 state 7
-
-    (11) decl -> ID . IGUAL exp
-
-    IGUAL           shift and go to state 16
-
-
-state 8
 
     (3) program -> CLASS ID DP classbody .
     (6) program -> CLASS ID DP classbody . program
@@ -214,17 +206,83 @@ state 8
     $end            reduce using rule 3 (program -> CLASS ID DP classbody .)
     CLASS           shift and go to state 2
 
-    program                        shift and go to state 17
+    program                        shift and go to state 11
+
+state 8
+
+    (7) classbody -> NEWLINE . IDENT decls DEDENT
+
+    IDENT           shift and go to state 12
+
 
 state 9
 
-    (7) classbody -> decls .
+    (1) program -> CLASS ID LPAREN ID IGUAL . ID RPAREN DP classbody
+    (4) program -> CLASS ID LPAREN ID IGUAL . ID RPAREN DP classbody program
 
-    CLASS           reduce using rule 7 (classbody -> decls .)
-    $end            reduce using rule 7 (classbody -> decls .)
+    ID              shift and go to state 13
 
 
 state 10
+
+    (2) program -> CLASS ID LPAREN ID RPAREN . DP classbody
+    (5) program -> CLASS ID LPAREN ID RPAREN . DP classbody program
+
+    DP              shift and go to state 14
+
+
+state 11
+
+    (6) program -> CLASS ID DP classbody program .
+
+    $end            reduce using rule 6 (program -> CLASS ID DP classbody program .)
+
+
+state 12
+
+    (7) classbody -> NEWLINE IDENT . decls DEDENT
+    (8) decls -> . decl decls
+    (9) decls -> . decl
+    (10) decl -> . funcdecl
+    (11) decl -> . ID IGUAL exp
+    (12) funcdecl -> . signature body
+    (13) signature -> . DEF ID LPAREN sigparams RPAREN DP
+    (14) signature -> . DEF ID LPAREN RPAREN DP
+
+    ID              shift and go to state 18
+    DEF             shift and go to state 20
+
+    decls                          shift and go to state 15
+    decl                           shift and go to state 16
+    funcdecl                       shift and go to state 17
+    signature                      shift and go to state 19
+
+state 13
+
+    (1) program -> CLASS ID LPAREN ID IGUAL ID . RPAREN DP classbody
+    (4) program -> CLASS ID LPAREN ID IGUAL ID . RPAREN DP classbody program
+
+    RPAREN          shift and go to state 21
+
+
+state 14
+
+    (2) program -> CLASS ID LPAREN ID RPAREN DP . classbody
+    (5) program -> CLASS ID LPAREN ID RPAREN DP . classbody program
+    (7) classbody -> . NEWLINE IDENT decls DEDENT
+
+    NEWLINE         shift and go to state 8
+
+    classbody                      shift and go to state 22
+
+state 15
+
+    (7) classbody -> NEWLINE IDENT decls . DEDENT
+
+    DEDENT          shift and go to state 23
+
+
+state 16
 
     (8) decls -> decl . decls
     (9) decls -> decl .
@@ -236,99 +294,88 @@ state 10
     (13) signature -> . DEF ID LPAREN sigparams RPAREN DP
     (14) signature -> . DEF ID LPAREN RPAREN DP
 
-    CLASS           reduce using rule 9 (decls -> decl .)
-    $end            reduce using rule 9 (decls -> decl .)
-    ID              shift and go to state 7
-    DEF             shift and go to state 13
+    DEDENT          reduce using rule 9 (decls -> decl .)
+    ID              shift and go to state 18
+    DEF             shift and go to state 20
 
-    decl                           shift and go to state 10
-    decls                          shift and go to state 18
-    funcdecl                       shift and go to state 11
-    signature                      shift and go to state 12
+    decl                           shift and go to state 16
+    decls                          shift and go to state 24
+    funcdecl                       shift and go to state 17
+    signature                      shift and go to state 19
 
-state 11
+state 17
 
     (10) decl -> funcdecl .
 
     ID              reduce using rule 10 (decl -> funcdecl .)
     DEF             reduce using rule 10 (decl -> funcdecl .)
-    CLASS           reduce using rule 10 (decl -> funcdecl .)
-    $end            reduce using rule 10 (decl -> funcdecl .)
+    DEDENT          reduce using rule 10 (decl -> funcdecl .)
 
 
-state 12
+state 18
+
+    (11) decl -> ID . IGUAL exp
+
+    IGUAL           shift and go to state 25
+
+
+state 19
 
     (12) funcdecl -> signature . body
-    (19) body -> . stms
-    (20) stms -> . stm
-    (21) stms -> . stm stms
-    (22) stm -> . exp
-    (23) stm -> . WHILE exp DP body
-    (24) stm -> . RETURN exp
-    (25) stm -> . PASS
-    (26) exp -> . exp IGUAL exp1
-    (27) exp -> . exp1
-    (28) exp1 -> . exp1 SOMA exp2
-    (29) exp1 -> . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
+    (19) body -> . NEWLINE IDENT stms DEDENT
 
-    WHILE           shift and go to state 23
-    RETURN          shift and go to state 24
-    PASS            shift and go to state 25
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    NEWLINE         shift and go to state 27
 
-    body                           shift and go to state 19
-    stms                           shift and go to state 20
-    stm                            shift and go to state 21
-    exp                            shift and go to state 22
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    body                           shift and go to state 26
 
-state 13
+state 20
 
     (13) signature -> DEF . ID LPAREN sigparams RPAREN DP
     (14) signature -> DEF . ID LPAREN RPAREN DP
 
-    ID              shift and go to state 36
+    ID              shift and go to state 28
 
 
-state 14
+state 21
 
-    (1) program -> CLASS ID LPAREN ID IGUAL . ID RPAREN DP classbody
-    (4) program -> CLASS ID LPAREN ID IGUAL . ID RPAREN DP classbody program
+    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN . DP classbody
+    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN . DP classbody program
 
-    ID              shift and go to state 37
-
-
-state 15
-
-    (2) program -> CLASS ID LPAREN ID RPAREN . DP classbody
-    (5) program -> CLASS ID LPAREN ID RPAREN . DP classbody program
-
-    DP              shift and go to state 38
+    DP              shift and go to state 29
 
 
-state 16
+state 22
+
+    (2) program -> CLASS ID LPAREN ID RPAREN DP classbody .
+    (5) program -> CLASS ID LPAREN ID RPAREN DP classbody . program
+    (1) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody
+    (2) program -> . CLASS ID LPAREN ID RPAREN DP classbody
+    (3) program -> . CLASS ID DP classbody
+    (4) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program
+    (5) program -> . CLASS ID LPAREN ID RPAREN DP classbody program
+    (6) program -> . CLASS ID DP classbody program
+
+    $end            reduce using rule 2 (program -> CLASS ID LPAREN ID RPAREN DP classbody .)
+    CLASS           shift and go to state 2
+
+    program                        shift and go to state 30
+
+state 23
+
+    (7) classbody -> NEWLINE IDENT decls DEDENT .
+
+    CLASS           reduce using rule 7 (classbody -> NEWLINE IDENT decls DEDENT .)
+    $end            reduce using rule 7 (classbody -> NEWLINE IDENT decls DEDENT .)
+
+
+state 24
+
+    (8) decls -> decl decls .
+
+    DEDENT          reduce using rule 8 (decls -> decl decls .)
+
+
+state 25
 
     (11) decl -> ID IGUAL . exp
     (26) exp -> . exp IGUAL exp1
@@ -350,67 +397,252 @@ state 16
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    exp                            shift and go to state 39
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    exp                            shift and go to state 32
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
 
-state 17
-
-    (6) program -> CLASS ID DP classbody program .
-
-    $end            reduce using rule 6 (program -> CLASS ID DP classbody program .)
-
-
-state 18
-
-    (8) decls -> decl decls .
-
-    CLASS           reduce using rule 8 (decls -> decl decls .)
-    $end            reduce using rule 8 (decls -> decl decls .)
-
-
-state 19
+state 26
 
     (12) funcdecl -> signature body .
 
     ID              reduce using rule 12 (funcdecl -> signature body .)
     DEF             reduce using rule 12 (funcdecl -> signature body .)
-    CLASS           reduce using rule 12 (funcdecl -> signature body .)
-    $end            reduce using rule 12 (funcdecl -> signature body .)
+    DEDENT          reduce using rule 12 (funcdecl -> signature body .)
 
 
-state 20
+state 27
 
-    (19) body -> stms .
+    (19) body -> NEWLINE . IDENT stms DEDENT
 
-    ID              reduce using rule 19 (body -> stms .)
-    DEF             reduce using rule 19 (body -> stms .)
-    CLASS           reduce using rule 19 (body -> stms .)
-    $end            reduce using rule 19 (body -> stms .)
-    WHILE           reduce using rule 19 (body -> stms .)
-    RETURN          reduce using rule 19 (body -> stms .)
-    PASS            reduce using rule 19 (body -> stms .)
-    NUMBER          reduce using rule 19 (body -> stms .)
-    TRUE            reduce using rule 19 (body -> stms .)
-    FALSE           reduce using rule 19 (body -> stms .)
-    SELF            reduce using rule 19 (body -> stms .)
+    IDENT           shift and go to state 42
 
 
-state 21
+state 28
 
-    (20) stms -> stm .
-    (21) stms -> stm . stms
-    (20) stms -> . stm
-    (21) stms -> . stm stms
+    (13) signature -> DEF ID . LPAREN sigparams RPAREN DP
+    (14) signature -> DEF ID . LPAREN RPAREN DP
+
+    LPAREN          shift and go to state 43
+
+
+state 29
+
+    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP . classbody
+    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP . classbody program
+    (7) classbody -> . NEWLINE IDENT decls DEDENT
+
+    NEWLINE         shift and go to state 8
+
+    classbody                      shift and go to state 44
+
+state 30
+
+    (5) program -> CLASS ID LPAREN ID RPAREN DP classbody program .
+
+    $end            reduce using rule 5 (program -> CLASS ID LPAREN ID RPAREN DP classbody program .)
+
+
+state 31
+
+    (36) exp4 -> ID .
+    (40) exp4 -> ID . P exp4
+    (42) call -> ID . LPAREN params RPAREN
+    (43) call -> ID . LPAREN RPAREN
+
+    POT             reduce using rule 36 (exp4 -> ID .)
+    VEZES           reduce using rule 36 (exp4 -> ID .)
+    SOMA            reduce using rule 36 (exp4 -> ID .)
+    IGUAL           reduce using rule 36 (exp4 -> ID .)
+    ID              reduce using rule 36 (exp4 -> ID .)
+    DEF             reduce using rule 36 (exp4 -> ID .)
+    DEDENT          reduce using rule 36 (exp4 -> ID .)
+    NEWLINE         reduce using rule 36 (exp4 -> ID .)
+    COMMA           reduce using rule 36 (exp4 -> ID .)
+    RPAREN          reduce using rule 36 (exp4 -> ID .)
+    DP              reduce using rule 36 (exp4 -> ID .)
+    P               shift and go to state 45
+    LPAREN          shift and go to state 46
+
+
+state 32
+
+    (11) decl -> ID IGUAL exp .
+    (26) exp -> exp . IGUAL exp1
+
+    ID              reduce using rule 11 (decl -> ID IGUAL exp .)
+    DEF             reduce using rule 11 (decl -> ID IGUAL exp .)
+    DEDENT          reduce using rule 11 (decl -> ID IGUAL exp .)
+    IGUAL           shift and go to state 47
+
+
+state 33
+
+    (27) exp -> exp1 .
+    (28) exp1 -> exp1 . SOMA exp2
+
+    IGUAL           reduce using rule 27 (exp -> exp1 .)
+    ID              reduce using rule 27 (exp -> exp1 .)
+    DEF             reduce using rule 27 (exp -> exp1 .)
+    DEDENT          reduce using rule 27 (exp -> exp1 .)
+    NEWLINE         reduce using rule 27 (exp -> exp1 .)
+    COMMA           reduce using rule 27 (exp -> exp1 .)
+    RPAREN          reduce using rule 27 (exp -> exp1 .)
+    DP              reduce using rule 27 (exp -> exp1 .)
+    SOMA            shift and go to state 48
+
+
+state 34
+
+    (29) exp1 -> exp2 .
+    (30) exp2 -> exp2 . VEZES exp3
+
+    SOMA            reduce using rule 29 (exp1 -> exp2 .)
+    IGUAL           reduce using rule 29 (exp1 -> exp2 .)
+    ID              reduce using rule 29 (exp1 -> exp2 .)
+    DEF             reduce using rule 29 (exp1 -> exp2 .)
+    DEDENT          reduce using rule 29 (exp1 -> exp2 .)
+    NEWLINE         reduce using rule 29 (exp1 -> exp2 .)
+    COMMA           reduce using rule 29 (exp1 -> exp2 .)
+    RPAREN          reduce using rule 29 (exp1 -> exp2 .)
+    DP              reduce using rule 29 (exp1 -> exp2 .)
+    VEZES           shift and go to state 49
+
+
+state 35
+
+    (31) exp2 -> exp3 .
+
+    VEZES           reduce using rule 31 (exp2 -> exp3 .)
+    SOMA            reduce using rule 31 (exp2 -> exp3 .)
+    IGUAL           reduce using rule 31 (exp2 -> exp3 .)
+    ID              reduce using rule 31 (exp2 -> exp3 .)
+    DEF             reduce using rule 31 (exp2 -> exp3 .)
+    DEDENT          reduce using rule 31 (exp2 -> exp3 .)
+    NEWLINE         reduce using rule 31 (exp2 -> exp3 .)
+    COMMA           reduce using rule 31 (exp2 -> exp3 .)
+    RPAREN          reduce using rule 31 (exp2 -> exp3 .)
+    DP              reduce using rule 31 (exp2 -> exp3 .)
+
+
+state 36
+
+    (32) exp3 -> exp4 . POT exp3
+    (33) exp3 -> exp4 .
+
+    POT             shift and go to state 50
+    VEZES           reduce using rule 33 (exp3 -> exp4 .)
+    SOMA            reduce using rule 33 (exp3 -> exp4 .)
+    IGUAL           reduce using rule 33 (exp3 -> exp4 .)
+    ID              reduce using rule 33 (exp3 -> exp4 .)
+    DEF             reduce using rule 33 (exp3 -> exp4 .)
+    DEDENT          reduce using rule 33 (exp3 -> exp4 .)
+    NEWLINE         reduce using rule 33 (exp3 -> exp4 .)
+    COMMA           reduce using rule 33 (exp3 -> exp4 .)
+    RPAREN          reduce using rule 33 (exp3 -> exp4 .)
+    DP              reduce using rule 33 (exp3 -> exp4 .)
+
+
+state 37
+
+    (34) exp4 -> call .
+
+    POT             reduce using rule 34 (exp4 -> call .)
+    VEZES           reduce using rule 34 (exp4 -> call .)
+    SOMA            reduce using rule 34 (exp4 -> call .)
+    IGUAL           reduce using rule 34 (exp4 -> call .)
+    ID              reduce using rule 34 (exp4 -> call .)
+    DEF             reduce using rule 34 (exp4 -> call .)
+    DEDENT          reduce using rule 34 (exp4 -> call .)
+    NEWLINE         reduce using rule 34 (exp4 -> call .)
+    COMMA           reduce using rule 34 (exp4 -> call .)
+    RPAREN          reduce using rule 34 (exp4 -> call .)
+    DP              reduce using rule 34 (exp4 -> call .)
+
+
+state 38
+
+    (35) exp4 -> NUMBER .
+
+    POT             reduce using rule 35 (exp4 -> NUMBER .)
+    VEZES           reduce using rule 35 (exp4 -> NUMBER .)
+    SOMA            reduce using rule 35 (exp4 -> NUMBER .)
+    IGUAL           reduce using rule 35 (exp4 -> NUMBER .)
+    ID              reduce using rule 35 (exp4 -> NUMBER .)
+    DEF             reduce using rule 35 (exp4 -> NUMBER .)
+    DEDENT          reduce using rule 35 (exp4 -> NUMBER .)
+    NEWLINE         reduce using rule 35 (exp4 -> NUMBER .)
+    COMMA           reduce using rule 35 (exp4 -> NUMBER .)
+    RPAREN          reduce using rule 35 (exp4 -> NUMBER .)
+    DP              reduce using rule 35 (exp4 -> NUMBER .)
+
+
+state 39
+
+    (37) exp4 -> TRUE .
+
+    POT             reduce using rule 37 (exp4 -> TRUE .)
+    VEZES           reduce using rule 37 (exp4 -> TRUE .)
+    SOMA            reduce using rule 37 (exp4 -> TRUE .)
+    IGUAL           reduce using rule 37 (exp4 -> TRUE .)
+    ID              reduce using rule 37 (exp4 -> TRUE .)
+    DEF             reduce using rule 37 (exp4 -> TRUE .)
+    DEDENT          reduce using rule 37 (exp4 -> TRUE .)
+    NEWLINE         reduce using rule 37 (exp4 -> TRUE .)
+    COMMA           reduce using rule 37 (exp4 -> TRUE .)
+    RPAREN          reduce using rule 37 (exp4 -> TRUE .)
+    DP              reduce using rule 37 (exp4 -> TRUE .)
+
+
+state 40
+
+    (38) exp4 -> FALSE .
+
+    POT             reduce using rule 38 (exp4 -> FALSE .)
+    VEZES           reduce using rule 38 (exp4 -> FALSE .)
+    SOMA            reduce using rule 38 (exp4 -> FALSE .)
+    IGUAL           reduce using rule 38 (exp4 -> FALSE .)
+    ID              reduce using rule 38 (exp4 -> FALSE .)
+    DEF             reduce using rule 38 (exp4 -> FALSE .)
+    DEDENT          reduce using rule 38 (exp4 -> FALSE .)
+    NEWLINE         reduce using rule 38 (exp4 -> FALSE .)
+    COMMA           reduce using rule 38 (exp4 -> FALSE .)
+    RPAREN          reduce using rule 38 (exp4 -> FALSE .)
+    DP              reduce using rule 38 (exp4 -> FALSE .)
+
+
+state 41
+
+    (39) exp4 -> SELF .
+    (41) exp4 -> SELF . P exp4
+
+    POT             reduce using rule 39 (exp4 -> SELF .)
+    VEZES           reduce using rule 39 (exp4 -> SELF .)
+    SOMA            reduce using rule 39 (exp4 -> SELF .)
+    IGUAL           reduce using rule 39 (exp4 -> SELF .)
+    ID              reduce using rule 39 (exp4 -> SELF .)
+    DEF             reduce using rule 39 (exp4 -> SELF .)
+    DEDENT          reduce using rule 39 (exp4 -> SELF .)
+    NEWLINE         reduce using rule 39 (exp4 -> SELF .)
+    COMMA           reduce using rule 39 (exp4 -> SELF .)
+    RPAREN          reduce using rule 39 (exp4 -> SELF .)
+    DP              reduce using rule 39 (exp4 -> SELF .)
+    P               shift and go to state 51
+
+
+state 42
+
+    (19) body -> NEWLINE IDENT . stms DEDENT
+    (20) stms -> . stm NEWLINE
+    (21) stms -> . stm NEWLINE stms
     (22) stm -> . exp
     (23) stm -> . WHILE exp DP body
     (24) stm -> . RETURN exp
@@ -434,605 +666,56 @@ state 21
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-  ! shift/reduce conflict for WHILE resolved as shift
-  ! shift/reduce conflict for RETURN resolved as shift
-  ! shift/reduce conflict for PASS resolved as shift
-  ! shift/reduce conflict for NUMBER resolved as shift
-  ! shift/reduce conflict for ID resolved as shift
-  ! shift/reduce conflict for TRUE resolved as shift
-  ! shift/reduce conflict for FALSE resolved as shift
-  ! shift/reduce conflict for SELF resolved as shift
-    DEF             reduce using rule 20 (stms -> stm .)
-    CLASS           reduce using rule 20 (stms -> stm .)
-    $end            reduce using rule 20 (stms -> stm .)
-    WHILE           shift and go to state 23
-    RETURN          shift and go to state 24
-    PASS            shift and go to state 25
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-  ! ID              [ reduce using rule 20 (stms -> stm .) ]
-  ! WHILE           [ reduce using rule 20 (stms -> stm .) ]
-  ! RETURN          [ reduce using rule 20 (stms -> stm .) ]
-  ! PASS            [ reduce using rule 20 (stms -> stm .) ]
-  ! NUMBER          [ reduce using rule 20 (stms -> stm .) ]
-  ! TRUE            [ reduce using rule 20 (stms -> stm .) ]
-  ! FALSE           [ reduce using rule 20 (stms -> stm .) ]
-  ! SELF            [ reduce using rule 20 (stms -> stm .) ]
-
-    stm                            shift and go to state 21
-    stms                           shift and go to state 40
-    exp                            shift and go to state 22
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
-
-state 22
-
-    (22) stm -> exp .
-    (26) exp -> exp . IGUAL exp1
-
-    WHILE           reduce using rule 22 (stm -> exp .)
-    RETURN          reduce using rule 22 (stm -> exp .)
-    PASS            reduce using rule 22 (stm -> exp .)
-    NUMBER          reduce using rule 22 (stm -> exp .)
-    ID              reduce using rule 22 (stm -> exp .)
-    TRUE            reduce using rule 22 (stm -> exp .)
-    FALSE           reduce using rule 22 (stm -> exp .)
-    SELF            reduce using rule 22 (stm -> exp .)
-    DEF             reduce using rule 22 (stm -> exp .)
-    CLASS           reduce using rule 22 (stm -> exp .)
-    $end            reduce using rule 22 (stm -> exp .)
-    IGUAL           shift and go to state 41
-
-
-state 23
-
-    (23) stm -> WHILE . exp DP body
-    (26) exp -> . exp IGUAL exp1
-    (27) exp -> . exp1
-    (28) exp1 -> . exp1 SOMA exp2
-    (29) exp1 -> . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
-
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-    exp                            shift and go to state 42
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
-
-state 24
-
-    (24) stm -> RETURN . exp
-    (26) exp -> . exp IGUAL exp1
-    (27) exp -> . exp1
-    (28) exp1 -> . exp1 SOMA exp2
-    (29) exp1 -> . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
-
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-    exp                            shift and go to state 43
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
-
-state 25
-
-    (25) stm -> PASS .
-
-    WHILE           reduce using rule 25 (stm -> PASS .)
-    RETURN          reduce using rule 25 (stm -> PASS .)
-    PASS            reduce using rule 25 (stm -> PASS .)
-    NUMBER          reduce using rule 25 (stm -> PASS .)
-    ID              reduce using rule 25 (stm -> PASS .)
-    TRUE            reduce using rule 25 (stm -> PASS .)
-    FALSE           reduce using rule 25 (stm -> PASS .)
-    SELF            reduce using rule 25 (stm -> PASS .)
-    DEF             reduce using rule 25 (stm -> PASS .)
-    CLASS           reduce using rule 25 (stm -> PASS .)
-    $end            reduce using rule 25 (stm -> PASS .)
-
-
-state 26
-
-    (27) exp -> exp1 .
-    (28) exp1 -> exp1 . SOMA exp2
-
-    IGUAL           reduce using rule 27 (exp -> exp1 .)
-    WHILE           reduce using rule 27 (exp -> exp1 .)
-    RETURN          reduce using rule 27 (exp -> exp1 .)
-    PASS            reduce using rule 27 (exp -> exp1 .)
-    NUMBER          reduce using rule 27 (exp -> exp1 .)
-    ID              reduce using rule 27 (exp -> exp1 .)
-    TRUE            reduce using rule 27 (exp -> exp1 .)
-    FALSE           reduce using rule 27 (exp -> exp1 .)
-    SELF            reduce using rule 27 (exp -> exp1 .)
-    DEF             reduce using rule 27 (exp -> exp1 .)
-    CLASS           reduce using rule 27 (exp -> exp1 .)
-    $end            reduce using rule 27 (exp -> exp1 .)
-    DP              reduce using rule 27 (exp -> exp1 .)
-    COMMA           reduce using rule 27 (exp -> exp1 .)
-    RPAREN          reduce using rule 27 (exp -> exp1 .)
-    SOMA            shift and go to state 44
-
-
-state 27
-
-    (29) exp1 -> exp2 .
-    (30) exp2 -> exp2 . VEZES exp3
-
-    SOMA            reduce using rule 29 (exp1 -> exp2 .)
-    IGUAL           reduce using rule 29 (exp1 -> exp2 .)
-    WHILE           reduce using rule 29 (exp1 -> exp2 .)
-    RETURN          reduce using rule 29 (exp1 -> exp2 .)
-    PASS            reduce using rule 29 (exp1 -> exp2 .)
-    NUMBER          reduce using rule 29 (exp1 -> exp2 .)
-    ID              reduce using rule 29 (exp1 -> exp2 .)
-    TRUE            reduce using rule 29 (exp1 -> exp2 .)
-    FALSE           reduce using rule 29 (exp1 -> exp2 .)
-    SELF            reduce using rule 29 (exp1 -> exp2 .)
-    DEF             reduce using rule 29 (exp1 -> exp2 .)
-    CLASS           reduce using rule 29 (exp1 -> exp2 .)
-    $end            reduce using rule 29 (exp1 -> exp2 .)
-    DP              reduce using rule 29 (exp1 -> exp2 .)
-    COMMA           reduce using rule 29 (exp1 -> exp2 .)
-    RPAREN          reduce using rule 29 (exp1 -> exp2 .)
-    VEZES           shift and go to state 45
-
-
-state 28
-
-    (31) exp2 -> exp3 .
-
-    VEZES           reduce using rule 31 (exp2 -> exp3 .)
-    SOMA            reduce using rule 31 (exp2 -> exp3 .)
-    IGUAL           reduce using rule 31 (exp2 -> exp3 .)
-    WHILE           reduce using rule 31 (exp2 -> exp3 .)
-    RETURN          reduce using rule 31 (exp2 -> exp3 .)
-    PASS            reduce using rule 31 (exp2 -> exp3 .)
-    NUMBER          reduce using rule 31 (exp2 -> exp3 .)
-    ID              reduce using rule 31 (exp2 -> exp3 .)
-    TRUE            reduce using rule 31 (exp2 -> exp3 .)
-    FALSE           reduce using rule 31 (exp2 -> exp3 .)
-    SELF            reduce using rule 31 (exp2 -> exp3 .)
-    DEF             reduce using rule 31 (exp2 -> exp3 .)
-    CLASS           reduce using rule 31 (exp2 -> exp3 .)
-    $end            reduce using rule 31 (exp2 -> exp3 .)
-    DP              reduce using rule 31 (exp2 -> exp3 .)
-    COMMA           reduce using rule 31 (exp2 -> exp3 .)
-    RPAREN          reduce using rule 31 (exp2 -> exp3 .)
-
-
-state 29
-
-    (32) exp3 -> exp4 . POT exp3
-    (33) exp3 -> exp4 .
-
-    POT             shift and go to state 46
-    VEZES           reduce using rule 33 (exp3 -> exp4 .)
-    SOMA            reduce using rule 33 (exp3 -> exp4 .)
-    IGUAL           reduce using rule 33 (exp3 -> exp4 .)
-    WHILE           reduce using rule 33 (exp3 -> exp4 .)
-    RETURN          reduce using rule 33 (exp3 -> exp4 .)
-    PASS            reduce using rule 33 (exp3 -> exp4 .)
-    NUMBER          reduce using rule 33 (exp3 -> exp4 .)
-    ID              reduce using rule 33 (exp3 -> exp4 .)
-    TRUE            reduce using rule 33 (exp3 -> exp4 .)
-    FALSE           reduce using rule 33 (exp3 -> exp4 .)
-    SELF            reduce using rule 33 (exp3 -> exp4 .)
-    DEF             reduce using rule 33 (exp3 -> exp4 .)
-    CLASS           reduce using rule 33 (exp3 -> exp4 .)
-    $end            reduce using rule 33 (exp3 -> exp4 .)
-    DP              reduce using rule 33 (exp3 -> exp4 .)
-    COMMA           reduce using rule 33 (exp3 -> exp4 .)
-    RPAREN          reduce using rule 33 (exp3 -> exp4 .)
-
-
-state 30
-
-    (34) exp4 -> call .
-
-    POT             reduce using rule 34 (exp4 -> call .)
-    VEZES           reduce using rule 34 (exp4 -> call .)
-    SOMA            reduce using rule 34 (exp4 -> call .)
-    IGUAL           reduce using rule 34 (exp4 -> call .)
-    WHILE           reduce using rule 34 (exp4 -> call .)
-    RETURN          reduce using rule 34 (exp4 -> call .)
-    PASS            reduce using rule 34 (exp4 -> call .)
-    NUMBER          reduce using rule 34 (exp4 -> call .)
-    ID              reduce using rule 34 (exp4 -> call .)
-    TRUE            reduce using rule 34 (exp4 -> call .)
-    FALSE           reduce using rule 34 (exp4 -> call .)
-    SELF            reduce using rule 34 (exp4 -> call .)
-    DEF             reduce using rule 34 (exp4 -> call .)
-    CLASS           reduce using rule 34 (exp4 -> call .)
-    $end            reduce using rule 34 (exp4 -> call .)
-    DP              reduce using rule 34 (exp4 -> call .)
-    COMMA           reduce using rule 34 (exp4 -> call .)
-    RPAREN          reduce using rule 34 (exp4 -> call .)
-
-
-state 31
-
-    (35) exp4 -> NUMBER .
-
-    POT             reduce using rule 35 (exp4 -> NUMBER .)
-    VEZES           reduce using rule 35 (exp4 -> NUMBER .)
-    SOMA            reduce using rule 35 (exp4 -> NUMBER .)
-    IGUAL           reduce using rule 35 (exp4 -> NUMBER .)
-    WHILE           reduce using rule 35 (exp4 -> NUMBER .)
-    RETURN          reduce using rule 35 (exp4 -> NUMBER .)
-    PASS            reduce using rule 35 (exp4 -> NUMBER .)
-    NUMBER          reduce using rule 35 (exp4 -> NUMBER .)
-    ID              reduce using rule 35 (exp4 -> NUMBER .)
-    TRUE            reduce using rule 35 (exp4 -> NUMBER .)
-    FALSE           reduce using rule 35 (exp4 -> NUMBER .)
-    SELF            reduce using rule 35 (exp4 -> NUMBER .)
-    DEF             reduce using rule 35 (exp4 -> NUMBER .)
-    CLASS           reduce using rule 35 (exp4 -> NUMBER .)
-    $end            reduce using rule 35 (exp4 -> NUMBER .)
-    DP              reduce using rule 35 (exp4 -> NUMBER .)
-    COMMA           reduce using rule 35 (exp4 -> NUMBER .)
-    RPAREN          reduce using rule 35 (exp4 -> NUMBER .)
-
-
-state 32
-
-    (36) exp4 -> ID .
-    (40) exp4 -> ID . P exp4
-    (42) call -> ID . LPAREN params RPAREN
-    (43) call -> ID . LPAREN RPAREN
-
-    POT             reduce using rule 36 (exp4 -> ID .)
-    VEZES           reduce using rule 36 (exp4 -> ID .)
-    SOMA            reduce using rule 36 (exp4 -> ID .)
-    IGUAL           reduce using rule 36 (exp4 -> ID .)
-    WHILE           reduce using rule 36 (exp4 -> ID .)
-    RETURN          reduce using rule 36 (exp4 -> ID .)
-    PASS            reduce using rule 36 (exp4 -> ID .)
-    NUMBER          reduce using rule 36 (exp4 -> ID .)
-    ID              reduce using rule 36 (exp4 -> ID .)
-    TRUE            reduce using rule 36 (exp4 -> ID .)
-    FALSE           reduce using rule 36 (exp4 -> ID .)
-    SELF            reduce using rule 36 (exp4 -> ID .)
-    DEF             reduce using rule 36 (exp4 -> ID .)
-    CLASS           reduce using rule 36 (exp4 -> ID .)
-    $end            reduce using rule 36 (exp4 -> ID .)
-    DP              reduce using rule 36 (exp4 -> ID .)
-    COMMA           reduce using rule 36 (exp4 -> ID .)
-    RPAREN          reduce using rule 36 (exp4 -> ID .)
-    P               shift and go to state 47
-    LPAREN          shift and go to state 48
-
-
-state 33
-
-    (37) exp4 -> TRUE .
-
-    POT             reduce using rule 37 (exp4 -> TRUE .)
-    VEZES           reduce using rule 37 (exp4 -> TRUE .)
-    SOMA            reduce using rule 37 (exp4 -> TRUE .)
-    IGUAL           reduce using rule 37 (exp4 -> TRUE .)
-    WHILE           reduce using rule 37 (exp4 -> TRUE .)
-    RETURN          reduce using rule 37 (exp4 -> TRUE .)
-    PASS            reduce using rule 37 (exp4 -> TRUE .)
-    NUMBER          reduce using rule 37 (exp4 -> TRUE .)
-    ID              reduce using rule 37 (exp4 -> TRUE .)
-    TRUE            reduce using rule 37 (exp4 -> TRUE .)
-    FALSE           reduce using rule 37 (exp4 -> TRUE .)
-    SELF            reduce using rule 37 (exp4 -> TRUE .)
-    DEF             reduce using rule 37 (exp4 -> TRUE .)
-    CLASS           reduce using rule 37 (exp4 -> TRUE .)
-    $end            reduce using rule 37 (exp4 -> TRUE .)
-    DP              reduce using rule 37 (exp4 -> TRUE .)
-    COMMA           reduce using rule 37 (exp4 -> TRUE .)
-    RPAREN          reduce using rule 37 (exp4 -> TRUE .)
-
-
-state 34
-
-    (38) exp4 -> FALSE .
-
-    POT             reduce using rule 38 (exp4 -> FALSE .)
-    VEZES           reduce using rule 38 (exp4 -> FALSE .)
-    SOMA            reduce using rule 38 (exp4 -> FALSE .)
-    IGUAL           reduce using rule 38 (exp4 -> FALSE .)
-    WHILE           reduce using rule 38 (exp4 -> FALSE .)
-    RETURN          reduce using rule 38 (exp4 -> FALSE .)
-    PASS            reduce using rule 38 (exp4 -> FALSE .)
-    NUMBER          reduce using rule 38 (exp4 -> FALSE .)
-    ID              reduce using rule 38 (exp4 -> FALSE .)
-    TRUE            reduce using rule 38 (exp4 -> FALSE .)
-    FALSE           reduce using rule 38 (exp4 -> FALSE .)
-    SELF            reduce using rule 38 (exp4 -> FALSE .)
-    DEF             reduce using rule 38 (exp4 -> FALSE .)
-    CLASS           reduce using rule 38 (exp4 -> FALSE .)
-    $end            reduce using rule 38 (exp4 -> FALSE .)
-    DP              reduce using rule 38 (exp4 -> FALSE .)
-    COMMA           reduce using rule 38 (exp4 -> FALSE .)
-    RPAREN          reduce using rule 38 (exp4 -> FALSE .)
-
-
-state 35
-
-    (39) exp4 -> SELF .
-    (41) exp4 -> SELF . P exp4
-
-    POT             reduce using rule 39 (exp4 -> SELF .)
-    VEZES           reduce using rule 39 (exp4 -> SELF .)
-    SOMA            reduce using rule 39 (exp4 -> SELF .)
-    IGUAL           reduce using rule 39 (exp4 -> SELF .)
-    WHILE           reduce using rule 39 (exp4 -> SELF .)
-    RETURN          reduce using rule 39 (exp4 -> SELF .)
-    PASS            reduce using rule 39 (exp4 -> SELF .)
-    NUMBER          reduce using rule 39 (exp4 -> SELF .)
-    ID              reduce using rule 39 (exp4 -> SELF .)
-    TRUE            reduce using rule 39 (exp4 -> SELF .)
-    FALSE           reduce using rule 39 (exp4 -> SELF .)
-    SELF            reduce using rule 39 (exp4 -> SELF .)
-    DEF             reduce using rule 39 (exp4 -> SELF .)
-    CLASS           reduce using rule 39 (exp4 -> SELF .)
-    $end            reduce using rule 39 (exp4 -> SELF .)
-    DP              reduce using rule 39 (exp4 -> SELF .)
-    COMMA           reduce using rule 39 (exp4 -> SELF .)
-    RPAREN          reduce using rule 39 (exp4 -> SELF .)
-    P               shift and go to state 49
-
-
-state 36
-
-    (13) signature -> DEF ID . LPAREN sigparams RPAREN DP
-    (14) signature -> DEF ID . LPAREN RPAREN DP
-
-    LPAREN          shift and go to state 50
-
-
-state 37
-
-    (1) program -> CLASS ID LPAREN ID IGUAL ID . RPAREN DP classbody
-    (4) program -> CLASS ID LPAREN ID IGUAL ID . RPAREN DP classbody program
-
-    RPAREN          shift and go to state 51
-
-
-state 38
-
-    (2) program -> CLASS ID LPAREN ID RPAREN DP . classbody
-    (5) program -> CLASS ID LPAREN ID RPAREN DP . classbody program
-    (7) classbody -> . decls
-    (8) decls -> . decl decls
-    (9) decls -> . decl
-    (10) decl -> . funcdecl
-    (11) decl -> . ID IGUAL exp
-    (12) funcdecl -> . signature body
-    (13) signature -> . DEF ID LPAREN sigparams RPAREN DP
-    (14) signature -> . DEF ID LPAREN RPAREN DP
-
-    ID              shift and go to state 7
-    DEF             shift and go to state 13
-
-    classbody                      shift and go to state 52
-    decls                          shift and go to state 9
-    decl                           shift and go to state 10
-    funcdecl                       shift and go to state 11
-    signature                      shift and go to state 12
-
-state 39
-
-    (11) decl -> ID IGUAL exp .
-    (26) exp -> exp . IGUAL exp1
-
-    ID              reduce using rule 11 (decl -> ID IGUAL exp .)
-    DEF             reduce using rule 11 (decl -> ID IGUAL exp .)
-    CLASS           reduce using rule 11 (decl -> ID IGUAL exp .)
-    $end            reduce using rule 11 (decl -> ID IGUAL exp .)
-    IGUAL           shift and go to state 41
-
-
-state 40
-
-    (21) stms -> stm stms .
-
-    ID              reduce using rule 21 (stms -> stm stms .)
-    DEF             reduce using rule 21 (stms -> stm stms .)
-    CLASS           reduce using rule 21 (stms -> stm stms .)
-    $end            reduce using rule 21 (stms -> stm stms .)
-    WHILE           reduce using rule 21 (stms -> stm stms .)
-    RETURN          reduce using rule 21 (stms -> stm stms .)
-    PASS            reduce using rule 21 (stms -> stm stms .)
-    NUMBER          reduce using rule 21 (stms -> stm stms .)
-    TRUE            reduce using rule 21 (stms -> stm stms .)
-    FALSE           reduce using rule 21 (stms -> stm stms .)
-    SELF            reduce using rule 21 (stms -> stm stms .)
-
-
-state 41
-
-    (26) exp -> exp IGUAL . exp1
-    (28) exp1 -> . exp1 SOMA exp2
-    (29) exp1 -> . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
-
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-    exp1                           shift and go to state 53
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
-
-state 42
-
-    (23) stm -> WHILE exp . DP body
-    (26) exp -> exp . IGUAL exp1
-
-    DP              shift and go to state 54
-    IGUAL           shift and go to state 41
-
+    WHILE           shift and go to state 55
+    RETURN          shift and go to state 56
+    PASS            shift and go to state 57
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    stms                           shift and go to state 52
+    stm                            shift and go to state 53
+    exp                            shift and go to state 54
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
 
 state 43
 
-    (24) stm -> RETURN exp .
-    (26) exp -> exp . IGUAL exp1
+    (13) signature -> DEF ID LPAREN . sigparams RPAREN DP
+    (14) signature -> DEF ID LPAREN . RPAREN DP
+    (15) sigparams -> . ID
+    (16) sigparams -> . SELF
+    (17) sigparams -> . ID COMMA sigparams
+    (18) sigparams -> . SELF COMMA sigparams
 
-    WHILE           reduce using rule 24 (stm -> RETURN exp .)
-    RETURN          reduce using rule 24 (stm -> RETURN exp .)
-    PASS            reduce using rule 24 (stm -> RETURN exp .)
-    NUMBER          reduce using rule 24 (stm -> RETURN exp .)
-    ID              reduce using rule 24 (stm -> RETURN exp .)
-    TRUE            reduce using rule 24 (stm -> RETURN exp .)
-    FALSE           reduce using rule 24 (stm -> RETURN exp .)
-    SELF            reduce using rule 24 (stm -> RETURN exp .)
-    DEF             reduce using rule 24 (stm -> RETURN exp .)
-    CLASS           reduce using rule 24 (stm -> RETURN exp .)
-    $end            reduce using rule 24 (stm -> RETURN exp .)
-    IGUAL           shift and go to state 41
+    RPAREN          shift and go to state 60
+    ID              shift and go to state 58
+    SELF            shift and go to state 61
 
+    sigparams                      shift and go to state 59
 
 state 44
 
-    (28) exp1 -> exp1 SOMA . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
+    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody .
+    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody . program
+    (1) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody
+    (2) program -> . CLASS ID LPAREN ID RPAREN DP classbody
+    (3) program -> . CLASS ID DP classbody
+    (4) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program
+    (5) program -> . CLASS ID LPAREN ID RPAREN DP classbody program
+    (6) program -> . CLASS ID DP classbody program
 
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    $end            reduce using rule 1 (program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody .)
+    CLASS           shift and go to state 2
 
-    exp2                           shift and go to state 55
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    program                        shift and go to state 62
 
 state 45
-
-    (30) exp2 -> exp2 VEZES . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
-
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-    exp3                           shift and go to state 56
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
-
-state 46
-
-    (32) exp3 -> exp4 POT . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
-
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
-
-    exp4                           shift and go to state 29
-    exp3                           shift and go to state 57
-    call                           shift and go to state 30
-
-state 47
 
     (40) exp4 -> ID P . exp4
     (34) exp4 -> . call
@@ -1046,16 +729,16 @@ state 47
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    exp4                           shift and go to state 58
-    call                           shift and go to state 30
+    exp4                           shift and go to state 63
+    call                           shift and go to state 37
 
-state 48
+state 46
 
     (42) call -> ID LPAREN . params RPAREN
     (43) call -> ID LPAREN . RPAREN
@@ -1080,22 +763,135 @@ state 48
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    RPAREN          shift and go to state 60
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    RPAREN          shift and go to state 65
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    params                         shift and go to state 59
-    exp                            shift and go to state 61
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    params                         shift and go to state 64
+    exp                            shift and go to state 66
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
+state 47
+
+    (26) exp -> exp IGUAL . exp1
+    (28) exp1 -> . exp1 SOMA exp2
+    (29) exp1 -> . exp2
+    (30) exp2 -> . exp2 VEZES exp3
+    (31) exp2 -> . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp1                           shift and go to state 67
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
+state 48
+
+    (28) exp1 -> exp1 SOMA . exp2
+    (30) exp2 -> . exp2 VEZES exp3
+    (31) exp2 -> . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp2                           shift and go to state 68
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
 
 state 49
+
+    (30) exp2 -> exp2 VEZES . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp3                           shift and go to state 69
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
+state 50
+
+    (32) exp3 -> exp4 POT . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp4                           shift and go to state 36
+    exp3                           shift and go to state 70
+    call                           shift and go to state 37
+
+state 51
 
     (41) exp4 -> SELF P . exp4
     (34) exp4 -> . call
@@ -1109,83 +905,305 @@ state 49
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    exp4                           shift and go to state 62
-    call                           shift and go to state 30
-
-state 50
-
-    (13) signature -> DEF ID LPAREN . sigparams RPAREN DP
-    (14) signature -> DEF ID LPAREN . RPAREN DP
-    (15) sigparams -> . ID
-    (16) sigparams -> . SELF
-    (17) sigparams -> . ID COMMA sigparams
-    (18) sigparams -> . SELF COMMA sigparams
-
-    RPAREN          shift and go to state 65
-    ID              shift and go to state 63
-    SELF            shift and go to state 66
-
-    sigparams                      shift and go to state 64
-
-state 51
-
-    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN . DP classbody
-    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN . DP classbody program
-
-    DP              shift and go to state 67
-
+    exp4                           shift and go to state 71
+    call                           shift and go to state 37
 
 state 52
 
-    (2) program -> CLASS ID LPAREN ID RPAREN DP classbody .
-    (5) program -> CLASS ID LPAREN ID RPAREN DP classbody . program
-    (1) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody
-    (2) program -> . CLASS ID LPAREN ID RPAREN DP classbody
-    (3) program -> . CLASS ID DP classbody
-    (4) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program
-    (5) program -> . CLASS ID LPAREN ID RPAREN DP classbody program
-    (6) program -> . CLASS ID DP classbody program
+    (19) body -> NEWLINE IDENT stms . DEDENT
 
-    $end            reduce using rule 2 (program -> CLASS ID LPAREN ID RPAREN DP classbody .)
-    CLASS           shift and go to state 2
+    DEDENT          shift and go to state 72
 
-    program                        shift and go to state 68
 
 state 53
+
+    (20) stms -> stm . NEWLINE
+    (21) stms -> stm . NEWLINE stms
+
+    NEWLINE         shift and go to state 73
+
+
+state 54
+
+    (22) stm -> exp .
+    (26) exp -> exp . IGUAL exp1
+
+    NEWLINE         reduce using rule 22 (stm -> exp .)
+    IGUAL           shift and go to state 47
+
+
+state 55
+
+    (23) stm -> WHILE . exp DP body
+    (26) exp -> . exp IGUAL exp1
+    (27) exp -> . exp1
+    (28) exp1 -> . exp1 SOMA exp2
+    (29) exp1 -> . exp2
+    (30) exp2 -> . exp2 VEZES exp3
+    (31) exp2 -> . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp                            shift and go to state 74
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
+state 56
+
+    (24) stm -> RETURN . exp
+    (26) exp -> . exp IGUAL exp1
+    (27) exp -> . exp1
+    (28) exp1 -> . exp1 SOMA exp2
+    (29) exp1 -> . exp2
+    (30) exp2 -> . exp2 VEZES exp3
+    (31) exp2 -> . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp                            shift and go to state 75
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
+state 57
+
+    (25) stm -> PASS .
+
+    NEWLINE         reduce using rule 25 (stm -> PASS .)
+
+
+state 58
+
+    (15) sigparams -> ID .
+    (17) sigparams -> ID . COMMA sigparams
+
+    RPAREN          reduce using rule 15 (sigparams -> ID .)
+    COMMA           shift and go to state 76
+
+
+state 59
+
+    (13) signature -> DEF ID LPAREN sigparams . RPAREN DP
+
+    RPAREN          shift and go to state 77
+
+
+state 60
+
+    (14) signature -> DEF ID LPAREN RPAREN . DP
+
+    DP              shift and go to state 78
+
+
+state 61
+
+    (16) sigparams -> SELF .
+    (18) sigparams -> SELF . COMMA sigparams
+
+    RPAREN          reduce using rule 16 (sigparams -> SELF .)
+    COMMA           shift and go to state 79
+
+
+state 62
+
+    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program .
+
+    $end            reduce using rule 4 (program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program .)
+
+
+state 63
+
+    (40) exp4 -> ID P exp4 .
+
+    POT             reduce using rule 40 (exp4 -> ID P exp4 .)
+    VEZES           reduce using rule 40 (exp4 -> ID P exp4 .)
+    SOMA            reduce using rule 40 (exp4 -> ID P exp4 .)
+    IGUAL           reduce using rule 40 (exp4 -> ID P exp4 .)
+    ID              reduce using rule 40 (exp4 -> ID P exp4 .)
+    DEF             reduce using rule 40 (exp4 -> ID P exp4 .)
+    DEDENT          reduce using rule 40 (exp4 -> ID P exp4 .)
+    NEWLINE         reduce using rule 40 (exp4 -> ID P exp4 .)
+    COMMA           reduce using rule 40 (exp4 -> ID P exp4 .)
+    RPAREN          reduce using rule 40 (exp4 -> ID P exp4 .)
+    DP              reduce using rule 40 (exp4 -> ID P exp4 .)
+
+
+state 64
+
+    (42) call -> ID LPAREN params . RPAREN
+
+    RPAREN          shift and go to state 80
+
+
+state 65
+
+    (43) call -> ID LPAREN RPAREN .
+
+    POT             reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    VEZES           reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    SOMA            reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    IGUAL           reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    ID              reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    DEF             reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    DEDENT          reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    NEWLINE         reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    COMMA           reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    RPAREN          reduce using rule 43 (call -> ID LPAREN RPAREN .)
+    DP              reduce using rule 43 (call -> ID LPAREN RPAREN .)
+
+
+state 66
+
+    (44) params -> exp . COMMA params
+    (45) params -> exp .
+    (26) exp -> exp . IGUAL exp1
+
+    COMMA           shift and go to state 81
+    RPAREN          reduce using rule 45 (params -> exp .)
+    IGUAL           shift and go to state 47
+
+
+state 67
 
     (26) exp -> exp IGUAL exp1 .
     (28) exp1 -> exp1 . SOMA exp2
 
     IGUAL           reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    WHILE           reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    RETURN          reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    PASS            reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    NUMBER          reduce using rule 26 (exp -> exp IGUAL exp1 .)
     ID              reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    TRUE            reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    FALSE           reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    SELF            reduce using rule 26 (exp -> exp IGUAL exp1 .)
     DEF             reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    CLASS           reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    $end            reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    DP              reduce using rule 26 (exp -> exp IGUAL exp1 .)
+    DEDENT          reduce using rule 26 (exp -> exp IGUAL exp1 .)
+    NEWLINE         reduce using rule 26 (exp -> exp IGUAL exp1 .)
     COMMA           reduce using rule 26 (exp -> exp IGUAL exp1 .)
     RPAREN          reduce using rule 26 (exp -> exp IGUAL exp1 .)
-    SOMA            shift and go to state 44
+    DP              reduce using rule 26 (exp -> exp IGUAL exp1 .)
+    SOMA            shift and go to state 48
 
 
-state 54
+state 68
 
-    (23) stm -> WHILE exp DP . body
-    (19) body -> . stms
-    (20) stms -> . stm
-    (21) stms -> . stm stms
+    (28) exp1 -> exp1 SOMA exp2 .
+    (30) exp2 -> exp2 . VEZES exp3
+
+    SOMA            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    IGUAL           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    ID              reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    DEF             reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    DEDENT          reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    NEWLINE         reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    COMMA           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    RPAREN          reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    DP              reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
+    VEZES           shift and go to state 49
+
+
+state 69
+
+    (30) exp2 -> exp2 VEZES exp3 .
+
+    VEZES           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    SOMA            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    IGUAL           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    ID              reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    DEF             reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    DEDENT          reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    NEWLINE         reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    COMMA           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    RPAREN          reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+    DP              reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
+
+
+state 70
+
+    (32) exp3 -> exp4 POT exp3 .
+
+    VEZES           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    SOMA            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    IGUAL           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    ID              reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    DEF             reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    DEDENT          reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    NEWLINE         reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    COMMA           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    RPAREN          reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+    DP              reduce using rule 32 (exp3 -> exp4 POT exp3 .)
+
+
+state 71
+
+    (41) exp4 -> SELF P exp4 .
+
+    POT             reduce using rule 41 (exp4 -> SELF P exp4 .)
+    VEZES           reduce using rule 41 (exp4 -> SELF P exp4 .)
+    SOMA            reduce using rule 41 (exp4 -> SELF P exp4 .)
+    IGUAL           reduce using rule 41 (exp4 -> SELF P exp4 .)
+    ID              reduce using rule 41 (exp4 -> SELF P exp4 .)
+    DEF             reduce using rule 41 (exp4 -> SELF P exp4 .)
+    DEDENT          reduce using rule 41 (exp4 -> SELF P exp4 .)
+    NEWLINE         reduce using rule 41 (exp4 -> SELF P exp4 .)
+    COMMA           reduce using rule 41 (exp4 -> SELF P exp4 .)
+    RPAREN          reduce using rule 41 (exp4 -> SELF P exp4 .)
+    DP              reduce using rule 41 (exp4 -> SELF P exp4 .)
+
+
+state 72
+
+    (19) body -> NEWLINE IDENT stms DEDENT .
+
+    ID              reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    DEF             reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    DEDENT          reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    NEWLINE         reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+
+
+state 73
+
+    (20) stms -> stm NEWLINE .
+    (21) stms -> stm NEWLINE . stms
+    (20) stms -> . stm NEWLINE
+    (21) stms -> . stm NEWLINE stms
     (22) stm -> . exp
     (23) stm -> . WHILE exp DP body
     (24) stm -> . RETURN exp
@@ -1209,264 +1227,84 @@ state 54
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    WHILE           shift and go to state 23
-    RETURN          shift and go to state 24
-    PASS            shift and go to state 25
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    DEDENT          reduce using rule 20 (stms -> stm NEWLINE .)
+    WHILE           shift and go to state 55
+    RETURN          shift and go to state 56
+    PASS            shift and go to state 57
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    exp                            shift and go to state 22
-    body                           shift and go to state 69
-    stms                           shift and go to state 20
-    stm                            shift and go to state 21
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    stm                            shift and go to state 53
+    stms                           shift and go to state 82
+    exp                            shift and go to state 54
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
 
-state 55
+state 74
 
-    (28) exp1 -> exp1 SOMA exp2 .
-    (30) exp2 -> exp2 . VEZES exp3
-
-    SOMA            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    IGUAL           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    WHILE           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    RETURN          reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    PASS            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    NUMBER          reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    ID              reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    TRUE            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    FALSE           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    SELF            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    DEF             reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    CLASS           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    $end            reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    DP              reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    COMMA           reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    RPAREN          reduce using rule 28 (exp1 -> exp1 SOMA exp2 .)
-    VEZES           shift and go to state 45
-
-
-state 56
-
-    (30) exp2 -> exp2 VEZES exp3 .
-
-    VEZES           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    SOMA            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    IGUAL           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    WHILE           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    RETURN          reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    PASS            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    NUMBER          reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    ID              reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    TRUE            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    FALSE           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    SELF            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    DEF             reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    CLASS           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    $end            reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    DP              reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    COMMA           reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-    RPAREN          reduce using rule 30 (exp2 -> exp2 VEZES exp3 .)
-
-
-state 57
-
-    (32) exp3 -> exp4 POT exp3 .
-
-    VEZES           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    SOMA            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    IGUAL           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    WHILE           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    RETURN          reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    PASS            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    NUMBER          reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    ID              reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    TRUE            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    FALSE           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    SELF            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    DEF             reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    CLASS           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    $end            reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    DP              reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    COMMA           reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-    RPAREN          reduce using rule 32 (exp3 -> exp4 POT exp3 .)
-
-
-state 58
-
-    (40) exp4 -> ID P exp4 .
-
-    POT             reduce using rule 40 (exp4 -> ID P exp4 .)
-    VEZES           reduce using rule 40 (exp4 -> ID P exp4 .)
-    SOMA            reduce using rule 40 (exp4 -> ID P exp4 .)
-    IGUAL           reduce using rule 40 (exp4 -> ID P exp4 .)
-    WHILE           reduce using rule 40 (exp4 -> ID P exp4 .)
-    RETURN          reduce using rule 40 (exp4 -> ID P exp4 .)
-    PASS            reduce using rule 40 (exp4 -> ID P exp4 .)
-    NUMBER          reduce using rule 40 (exp4 -> ID P exp4 .)
-    ID              reduce using rule 40 (exp4 -> ID P exp4 .)
-    TRUE            reduce using rule 40 (exp4 -> ID P exp4 .)
-    FALSE           reduce using rule 40 (exp4 -> ID P exp4 .)
-    SELF            reduce using rule 40 (exp4 -> ID P exp4 .)
-    DEF             reduce using rule 40 (exp4 -> ID P exp4 .)
-    CLASS           reduce using rule 40 (exp4 -> ID P exp4 .)
-    $end            reduce using rule 40 (exp4 -> ID P exp4 .)
-    DP              reduce using rule 40 (exp4 -> ID P exp4 .)
-    COMMA           reduce using rule 40 (exp4 -> ID P exp4 .)
-    RPAREN          reduce using rule 40 (exp4 -> ID P exp4 .)
-
-
-state 59
-
-    (42) call -> ID LPAREN params . RPAREN
-
-    RPAREN          shift and go to state 70
-
-
-state 60
-
-    (43) call -> ID LPAREN RPAREN .
-
-    POT             reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    VEZES           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    SOMA            reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    IGUAL           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    WHILE           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    RETURN          reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    PASS            reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    NUMBER          reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    ID              reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    TRUE            reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    FALSE           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    SELF            reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    DEF             reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    CLASS           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    $end            reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    DP              reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    COMMA           reduce using rule 43 (call -> ID LPAREN RPAREN .)
-    RPAREN          reduce using rule 43 (call -> ID LPAREN RPAREN .)
-
-
-state 61
-
-    (44) params -> exp . COMMA params
-    (45) params -> exp .
+    (23) stm -> WHILE exp . DP body
     (26) exp -> exp . IGUAL exp1
 
-    COMMA           shift and go to state 71
-    RPAREN          reduce using rule 45 (params -> exp .)
-    IGUAL           shift and go to state 41
+    DP              shift and go to state 83
+    IGUAL           shift and go to state 47
 
 
-state 62
+state 75
 
-    (41) exp4 -> SELF P exp4 .
+    (24) stm -> RETURN exp .
+    (26) exp -> exp . IGUAL exp1
 
-    POT             reduce using rule 41 (exp4 -> SELF P exp4 .)
-    VEZES           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    SOMA            reduce using rule 41 (exp4 -> SELF P exp4 .)
-    IGUAL           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    WHILE           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    RETURN          reduce using rule 41 (exp4 -> SELF P exp4 .)
-    PASS            reduce using rule 41 (exp4 -> SELF P exp4 .)
-    NUMBER          reduce using rule 41 (exp4 -> SELF P exp4 .)
-    ID              reduce using rule 41 (exp4 -> SELF P exp4 .)
-    TRUE            reduce using rule 41 (exp4 -> SELF P exp4 .)
-    FALSE           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    SELF            reduce using rule 41 (exp4 -> SELF P exp4 .)
-    DEF             reduce using rule 41 (exp4 -> SELF P exp4 .)
-    CLASS           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    $end            reduce using rule 41 (exp4 -> SELF P exp4 .)
-    DP              reduce using rule 41 (exp4 -> SELF P exp4 .)
-    COMMA           reduce using rule 41 (exp4 -> SELF P exp4 .)
-    RPAREN          reduce using rule 41 (exp4 -> SELF P exp4 .)
+    NEWLINE         reduce using rule 24 (stm -> RETURN exp .)
+    IGUAL           shift and go to state 47
 
 
-state 63
+state 76
 
-    (15) sigparams -> ID .
-    (17) sigparams -> ID . COMMA sigparams
+    (17) sigparams -> ID COMMA . sigparams
+    (15) sigparams -> . ID
+    (16) sigparams -> . SELF
+    (17) sigparams -> . ID COMMA sigparams
+    (18) sigparams -> . SELF COMMA sigparams
 
-    RPAREN          reduce using rule 15 (sigparams -> ID .)
-    COMMA           shift and go to state 72
+    ID              shift and go to state 58
+    SELF            shift and go to state 61
 
+    sigparams                      shift and go to state 84
 
-state 64
+state 77
 
-    (13) signature -> DEF ID LPAREN sigparams . RPAREN DP
+    (13) signature -> DEF ID LPAREN sigparams RPAREN . DP
 
-    RPAREN          shift and go to state 73
-
-
-state 65
-
-    (14) signature -> DEF ID LPAREN RPAREN . DP
-
-    DP              shift and go to state 74
+    DP              shift and go to state 85
 
 
-state 66
+state 78
 
-    (16) sigparams -> SELF .
-    (18) sigparams -> SELF . COMMA sigparams
+    (14) signature -> DEF ID LPAREN RPAREN DP .
 
-    RPAREN          reduce using rule 16 (sigparams -> SELF .)
-    COMMA           shift and go to state 75
+    NEWLINE         reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
 
 
-state 67
+state 79
 
-    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP . classbody
-    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP . classbody program
-    (7) classbody -> . decls
-    (8) decls -> . decl decls
-    (9) decls -> . decl
-    (10) decl -> . funcdecl
-    (11) decl -> . ID IGUAL exp
-    (12) funcdecl -> . signature body
-    (13) signature -> . DEF ID LPAREN sigparams RPAREN DP
-    (14) signature -> . DEF ID LPAREN RPAREN DP
+    (18) sigparams -> SELF COMMA . sigparams
+    (15) sigparams -> . ID
+    (16) sigparams -> . SELF
+    (17) sigparams -> . ID COMMA sigparams
+    (18) sigparams -> . SELF COMMA sigparams
 
-    ID              shift and go to state 7
-    DEF             shift and go to state 13
+    ID              shift and go to state 58
+    SELF            shift and go to state 61
 
-    classbody                      shift and go to state 76
-    decls                          shift and go to state 9
-    decl                           shift and go to state 10
-    funcdecl                       shift and go to state 11
-    signature                      shift and go to state 12
+    sigparams                      shift and go to state 86
 
-state 68
-
-    (5) program -> CLASS ID LPAREN ID RPAREN DP classbody program .
-
-    $end            reduce using rule 5 (program -> CLASS ID LPAREN ID RPAREN DP classbody program .)
-
-
-state 69
-
-    (23) stm -> WHILE exp DP body .
-
-    WHILE           reduce using rule 23 (stm -> WHILE exp DP body .)
-    RETURN          reduce using rule 23 (stm -> WHILE exp DP body .)
-    PASS            reduce using rule 23 (stm -> WHILE exp DP body .)
-    NUMBER          reduce using rule 23 (stm -> WHILE exp DP body .)
-    ID              reduce using rule 23 (stm -> WHILE exp DP body .)
-    TRUE            reduce using rule 23 (stm -> WHILE exp DP body .)
-    FALSE           reduce using rule 23 (stm -> WHILE exp DP body .)
-    SELF            reduce using rule 23 (stm -> WHILE exp DP body .)
-    DEF             reduce using rule 23 (stm -> WHILE exp DP body .)
-    CLASS           reduce using rule 23 (stm -> WHILE exp DP body .)
-    $end            reduce using rule 23 (stm -> WHILE exp DP body .)
-
-
-state 70
+state 80
 
     (42) call -> ID LPAREN params RPAREN .
 
@@ -1474,23 +1312,16 @@ state 70
     VEZES           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     SOMA            reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     IGUAL           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    WHILE           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    RETURN          reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    PASS            reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    NUMBER          reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     ID              reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    TRUE            reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    FALSE           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    SELF            reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     DEF             reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    CLASS           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    $end            reduce using rule 42 (call -> ID LPAREN params RPAREN .)
-    DP              reduce using rule 42 (call -> ID LPAREN params RPAREN .)
+    DEDENT          reduce using rule 42 (call -> ID LPAREN params RPAREN .)
+    NEWLINE         reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     COMMA           reduce using rule 42 (call -> ID LPAREN params RPAREN .)
     RPAREN          reduce using rule 42 (call -> ID LPAREN params RPAREN .)
+    DP              reduce using rule 42 (call -> ID LPAREN params RPAREN .)
 
 
-state 71
+state 81
 
     (44) params -> exp COMMA . params
     (44) params -> . exp COMMA params
@@ -1514,132 +1345,67 @@ state 71
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
-    NUMBER          shift and go to state 31
-    ID              shift and go to state 32
-    TRUE            shift and go to state 33
-    FALSE           shift and go to state 34
-    SELF            shift and go to state 35
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
 
-    exp                            shift and go to state 61
-    params                         shift and go to state 77
-    exp1                           shift and go to state 26
-    exp2                           shift and go to state 27
-    exp3                           shift and go to state 28
-    exp4                           shift and go to state 29
-    call                           shift and go to state 30
+    exp                            shift and go to state 66
+    params                         shift and go to state 87
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
 
-state 72
+state 82
 
-    (17) sigparams -> ID COMMA . sigparams
-    (15) sigparams -> . ID
-    (16) sigparams -> . SELF
-    (17) sigparams -> . ID COMMA sigparams
-    (18) sigparams -> . SELF COMMA sigparams
+    (21) stms -> stm NEWLINE stms .
 
-    ID              shift and go to state 63
-    SELF            shift and go to state 66
-
-    sigparams                      shift and go to state 78
-
-state 73
-
-    (13) signature -> DEF ID LPAREN sigparams RPAREN . DP
-
-    DP              shift and go to state 79
+    DEDENT          reduce using rule 21 (stms -> stm NEWLINE stms .)
 
 
-state 74
+state 83
 
-    (14) signature -> DEF ID LPAREN RPAREN DP .
+    (23) stm -> WHILE exp DP . body
+    (19) body -> . NEWLINE IDENT stms DEDENT
 
-    WHILE           reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    RETURN          reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    PASS            reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    NUMBER          reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    ID              reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    TRUE            reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    FALSE           reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
-    SELF            reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
+    NEWLINE         shift and go to state 27
 
+    body                           shift and go to state 88
 
-state 75
-
-    (18) sigparams -> SELF COMMA . sigparams
-    (15) sigparams -> . ID
-    (16) sigparams -> . SELF
-    (17) sigparams -> . ID COMMA sigparams
-    (18) sigparams -> . SELF COMMA sigparams
-
-    ID              shift and go to state 63
-    SELF            shift and go to state 66
-
-    sigparams                      shift and go to state 80
-
-state 76
-
-    (1) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody .
-    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody . program
-    (1) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody
-    (2) program -> . CLASS ID LPAREN ID RPAREN DP classbody
-    (3) program -> . CLASS ID DP classbody
-    (4) program -> . CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program
-    (5) program -> . CLASS ID LPAREN ID RPAREN DP classbody program
-    (6) program -> . CLASS ID DP classbody program
-
-    $end            reduce using rule 1 (program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody .)
-    CLASS           shift and go to state 2
-
-    program                        shift and go to state 81
-
-state 77
-
-    (44) params -> exp COMMA params .
-
-    RPAREN          reduce using rule 44 (params -> exp COMMA params .)
-
-
-state 78
+state 84
 
     (17) sigparams -> ID COMMA sigparams .
 
     RPAREN          reduce using rule 17 (sigparams -> ID COMMA sigparams .)
 
 
-state 79
+state 85
 
     (13) signature -> DEF ID LPAREN sigparams RPAREN DP .
 
-    WHILE           reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    RETURN          reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    PASS            reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    NUMBER          reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    ID              reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    TRUE            reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    FALSE           reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
-    SELF            reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
+    NEWLINE         reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
 
 
-state 80
+state 86
 
     (18) sigparams -> SELF COMMA sigparams .
 
     RPAREN          reduce using rule 18 (sigparams -> SELF COMMA sigparams .)
 
 
-state 81
+state 87
 
-    (4) program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program .
+    (44) params -> exp COMMA params .
 
-    $end            reduce using rule 4 (program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program .)
+    RPAREN          reduce using rule 44 (params -> exp COMMA params .)
 
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: shift/reduce conflict for WHILE in state 21 resolved as shift
-WARNING: shift/reduce conflict for RETURN in state 21 resolved as shift
-WARNING: shift/reduce conflict for PASS in state 21 resolved as shift
-WARNING: shift/reduce conflict for NUMBER in state 21 resolved as shift
-WARNING: shift/reduce conflict for ID in state 21 resolved as shift
-WARNING: shift/reduce conflict for TRUE in state 21 resolved as shift
-WARNING: shift/reduce conflict for FALSE in state 21 resolved as shift
-WARNING: shift/reduce conflict for SELF in state 21 resolved as shift
+
+state 88
+
+    (23) stm -> WHILE exp DP body .
+
+    NEWLINE         reduce using rule 23 (stm -> WHILE exp DP body .)
+

@@ -16,6 +16,7 @@ import ply.yacc as yacc
 from ExpressionLanguageLex import *
 import SintaxeAbstrata as sa
 
+
 def p_program1(p):
     ''' program : CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody '''
     p[0]= sa.SingleClass(p[2], p[4] + p[5] + p[6], p[9])
@@ -43,8 +44,8 @@ def p_program6(p):
 
 
 def p_classbody(p):
-    '''  classbody : decls '''
-    p[0] = sa.ClassBody(p[1])
+    '''  classbody : NEWLINE IDENT decls DEDENT '''
+    p[0] = sa.ClassBody(p[3])
 
 def p_decls(p):
     ''' decls : decl decls 
@@ -77,8 +78,7 @@ def p_signature2(p):
     p[0] = sa.Signature(p[2], None)
 
 
-
-def p_sigparams(p):
+def p_sigparams(p): 
     '''sigparams : ID
                   | SELF
                   | ID COMMA sigparams
@@ -90,16 +90,17 @@ def p_sigparams(p):
         p[0] = sa.CompoundSigParameter(p[1], p[3])
 
 def p_body(p):
-    ''' body : stms '''
-    p[0] = sa.Body(p[1])
+    ''' body : NEWLINE IDENT stms DEDENT '''
+    p[0] = sa.Body(p[3])
 
-def p_stms(p):
-    ''' stms : stm
-            | stm stms'''
-    if (len(p) == 2):
-        p[0] = sa.SingleStatement(p[1])
-    else:
-        p[0] = sa.CompoundStatement(p[1], p[2])
+def p_stms1(p):
+    ''' stms : stm NEWLINE'''
+    p[0] = sa.SingleStatement(p[1])
+
+def p_stms2(p):
+    ''' stms : stm NEWLINE stms'''
+    p[0] = sa.CompoundStatement(p[1], p[3])
+
 
 def p_stm1(p):
     ''' stm :  exp '''
@@ -200,4 +201,4 @@ def p_params_ids(p):
         p[0] = sa.CompoundParameter(p[1], p[3])
 
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error in input!", p)
