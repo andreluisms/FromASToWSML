@@ -94,28 +94,28 @@ def p_body(p):
     p[0] = sa.Body(p[3])
 
 def p_stms1(p):
-    ''' stms : stm NEWLINE'''
+    ''' stms : stm '''
     p[0] = sa.SingleStatement(p[1])
 
 def p_stms2(p):
-    ''' stms : stm NEWLINE stms'''
-    p[0] = sa.CompoundStatement(p[1], p[3])
+    ''' stms : stm stms'''
+    p[0] = sa.CompoundStatement(p[1], p[2])
 
 
 def p_stm1(p):
-    ''' stm :  exp '''
+    ''' stm :  exp NEWLINE'''
     p[0] = sa.ExpressionStm(p[1])
 
 def p_stm2(p):
     ''' stm :  WHILE exp DP body '''
-    p[0] = sa.StmWhileStmWhile(p[2], p[4])
+    p[0] = sa.WhileStm(p[2], p[4])
 
 def p_stm3(p):
-    ''' stm :  RETURN exp '''
+    ''' stm :  RETURN exp NEWLINE'''
     p[0] = sa.ReturnStm(p[2])
 
 def p_stm4(p):
-    ''' stm : PASS '''
+    ''' stm : PASS NEWLINE'''
     p[0] = sa.PassStm()
 
 

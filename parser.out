@@ -33,12 +33,12 @@ Rule 16    sigparams -> SELF
 Rule 17    sigparams -> ID COMMA sigparams
 Rule 18    sigparams -> SELF COMMA sigparams
 Rule 19    body -> NEWLINE IDENT stms DEDENT
-Rule 20    stms -> stm NEWLINE
-Rule 21    stms -> stm NEWLINE stms
-Rule 22    stm -> exp
+Rule 20    stms -> stm
+Rule 21    stms -> stm stms
+Rule 22    stm -> exp NEWLINE
 Rule 23    stm -> WHILE exp DP body
-Rule 24    stm -> RETURN exp
-Rule 25    stm -> PASS
+Rule 24    stm -> RETURN exp NEWLINE
+Rule 25    stm -> PASS NEWLINE
 Rule 26    exp -> exp IGUAL exp1
 Rule 27    exp -> exp1
 Rule 28    exp1 -> exp1 SOMA exp2
@@ -76,7 +76,7 @@ LBRACKETS            :
 LCHAV                : 
 LESS                 : 
 LPAREN               : 1 2 4 5 13 14 42 43
-NEWLINE              : 7 19 20 21
+NEWLINE              : 7 19 22 24 25
 NUMBER               : 35
 P                    : 40 41
 PASS                 : 25
@@ -641,12 +641,12 @@ state 41
 state 42
 
     (19) body -> NEWLINE IDENT . stms DEDENT
-    (20) stms -> . stm NEWLINE
-    (21) stms -> . stm NEWLINE stms
-    (22) stm -> . exp
+    (20) stms -> . stm
+    (21) stms -> . stm stms
+    (22) stm -> . exp NEWLINE
     (23) stm -> . WHILE exp DP body
-    (24) stm -> . RETURN exp
-    (25) stm -> . PASS
+    (24) stm -> . RETURN exp NEWLINE
+    (25) stm -> . PASS NEWLINE
     (26) exp -> . exp IGUAL exp1
     (27) exp -> . exp1
     (28) exp1 -> . exp1 SOMA exp2
@@ -923,24 +923,14 @@ state 52
 
 state 53
 
-    (20) stms -> stm . NEWLINE
-    (21) stms -> stm . NEWLINE stms
-
-    NEWLINE         shift and go to state 73
-
-
-state 54
-
-    (22) stm -> exp .
-    (26) exp -> exp . IGUAL exp1
-
-    NEWLINE         reduce using rule 22 (stm -> exp .)
-    IGUAL           shift and go to state 47
-
-
-state 55
-
-    (23) stm -> WHILE . exp DP body
+    (20) stms -> stm .
+    (21) stms -> stm . stms
+    (20) stms -> . stm
+    (21) stms -> . stm stms
+    (22) stm -> . exp NEWLINE
+    (23) stm -> . WHILE exp DP body
+    (24) stm -> . RETURN exp NEWLINE
+    (25) stm -> . PASS NEWLINE
     (26) exp -> . exp IGUAL exp1
     (27) exp -> . exp1
     (28) exp1 -> . exp1 SOMA exp2
@@ -960,22 +950,37 @@ state 55
     (42) call -> . ID LPAREN params RPAREN
     (43) call -> . ID LPAREN RPAREN
 
+    DEDENT          reduce using rule 20 (stms -> stm .)
+    WHILE           shift and go to state 55
+    RETURN          shift and go to state 56
+    PASS            shift and go to state 57
     NUMBER          shift and go to state 38
     ID              shift and go to state 31
     TRUE            shift and go to state 39
     FALSE           shift and go to state 40
     SELF            shift and go to state 41
 
-    exp                            shift and go to state 74
+    stm                            shift and go to state 53
+    stms                           shift and go to state 73
+    exp                            shift and go to state 54
     exp1                           shift and go to state 33
     exp2                           shift and go to state 34
     exp3                           shift and go to state 35
     exp4                           shift and go to state 36
     call                           shift and go to state 37
 
-state 56
+state 54
 
-    (24) stm -> RETURN . exp
+    (22) stm -> exp . NEWLINE
+    (26) exp -> exp . IGUAL exp1
+
+    NEWLINE         shift and go to state 74
+    IGUAL           shift and go to state 47
+
+
+state 55
+
+    (23) stm -> WHILE . exp DP body
     (26) exp -> . exp IGUAL exp1
     (27) exp -> . exp1
     (28) exp1 -> . exp1 SOMA exp2
@@ -1008,11 +1013,46 @@ state 56
     exp4                           shift and go to state 36
     call                           shift and go to state 37
 
+state 56
+
+    (24) stm -> RETURN . exp NEWLINE
+    (26) exp -> . exp IGUAL exp1
+    (27) exp -> . exp1
+    (28) exp1 -> . exp1 SOMA exp2
+    (29) exp1 -> . exp2
+    (30) exp2 -> . exp2 VEZES exp3
+    (31) exp2 -> . exp3
+    (32) exp3 -> . exp4 POT exp3
+    (33) exp3 -> . exp4
+    (34) exp4 -> . call
+    (35) exp4 -> . NUMBER
+    (36) exp4 -> . ID
+    (37) exp4 -> . TRUE
+    (38) exp4 -> . FALSE
+    (39) exp4 -> . SELF
+    (40) exp4 -> . ID P exp4
+    (41) exp4 -> . SELF P exp4
+    (42) call -> . ID LPAREN params RPAREN
+    (43) call -> . ID LPAREN RPAREN
+
+    NUMBER          shift and go to state 38
+    ID              shift and go to state 31
+    TRUE            shift and go to state 39
+    FALSE           shift and go to state 40
+    SELF            shift and go to state 41
+
+    exp                            shift and go to state 76
+    exp1                           shift and go to state 33
+    exp2                           shift and go to state 34
+    exp3                           shift and go to state 35
+    exp4                           shift and go to state 36
+    call                           shift and go to state 37
+
 state 57
 
-    (25) stm -> PASS .
+    (25) stm -> PASS . NEWLINE
 
-    NEWLINE         reduce using rule 25 (stm -> PASS .)
+    NEWLINE         shift and go to state 77
 
 
 state 58
@@ -1021,21 +1061,21 @@ state 58
     (17) sigparams -> ID . COMMA sigparams
 
     RPAREN          reduce using rule 15 (sigparams -> ID .)
-    COMMA           shift and go to state 76
+    COMMA           shift and go to state 78
 
 
 state 59
 
     (13) signature -> DEF ID LPAREN sigparams . RPAREN DP
 
-    RPAREN          shift and go to state 77
+    RPAREN          shift and go to state 79
 
 
 state 60
 
     (14) signature -> DEF ID LPAREN RPAREN . DP
 
-    DP              shift and go to state 78
+    DP              shift and go to state 80
 
 
 state 61
@@ -1044,7 +1084,7 @@ state 61
     (18) sigparams -> SELF . COMMA sigparams
 
     RPAREN          reduce using rule 16 (sigparams -> SELF .)
-    COMMA           shift and go to state 79
+    COMMA           shift and go to state 81
 
 
 state 62
@@ -1075,7 +1115,7 @@ state 64
 
     (42) call -> ID LPAREN params . RPAREN
 
-    RPAREN          shift and go to state 80
+    RPAREN          shift and go to state 82
 
 
 state 65
@@ -1101,7 +1141,7 @@ state 66
     (45) params -> exp .
     (26) exp -> exp . IGUAL exp1
 
-    COMMA           shift and go to state 81
+    COMMA           shift and go to state 83
     RPAREN          reduce using rule 45 (params -> exp .)
     IGUAL           shift and go to state 47
 
@@ -1195,76 +1235,71 @@ state 72
     ID              reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
     DEF             reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
     DEDENT          reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
-    NEWLINE         reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    WHILE           reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    RETURN          reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    PASS            reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    NUMBER          reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    TRUE            reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    FALSE           reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
+    SELF            reduce using rule 19 (body -> NEWLINE IDENT stms DEDENT .)
 
 
 state 73
 
-    (20) stms -> stm NEWLINE .
-    (21) stms -> stm NEWLINE . stms
-    (20) stms -> . stm NEWLINE
-    (21) stms -> . stm NEWLINE stms
-    (22) stm -> . exp
-    (23) stm -> . WHILE exp DP body
-    (24) stm -> . RETURN exp
-    (25) stm -> . PASS
-    (26) exp -> . exp IGUAL exp1
-    (27) exp -> . exp1
-    (28) exp1 -> . exp1 SOMA exp2
-    (29) exp1 -> . exp2
-    (30) exp2 -> . exp2 VEZES exp3
-    (31) exp2 -> . exp3
-    (32) exp3 -> . exp4 POT exp3
-    (33) exp3 -> . exp4
-    (34) exp4 -> . call
-    (35) exp4 -> . NUMBER
-    (36) exp4 -> . ID
-    (37) exp4 -> . TRUE
-    (38) exp4 -> . FALSE
-    (39) exp4 -> . SELF
-    (40) exp4 -> . ID P exp4
-    (41) exp4 -> . SELF P exp4
-    (42) call -> . ID LPAREN params RPAREN
-    (43) call -> . ID LPAREN RPAREN
+    (21) stms -> stm stms .
 
-    DEDENT          reduce using rule 20 (stms -> stm NEWLINE .)
-    WHILE           shift and go to state 55
-    RETURN          shift and go to state 56
-    PASS            shift and go to state 57
-    NUMBER          shift and go to state 38
-    ID              shift and go to state 31
-    TRUE            shift and go to state 39
-    FALSE           shift and go to state 40
-    SELF            shift and go to state 41
+    DEDENT          reduce using rule 21 (stms -> stm stms .)
 
-    stm                            shift and go to state 53
-    stms                           shift and go to state 82
-    exp                            shift and go to state 54
-    exp1                           shift and go to state 33
-    exp2                           shift and go to state 34
-    exp3                           shift and go to state 35
-    exp4                           shift and go to state 36
-    call                           shift and go to state 37
 
 state 74
 
-    (23) stm -> WHILE exp . DP body
-    (26) exp -> exp . IGUAL exp1
+    (22) stm -> exp NEWLINE .
 
-    DP              shift and go to state 83
-    IGUAL           shift and go to state 47
+    WHILE           reduce using rule 22 (stm -> exp NEWLINE .)
+    RETURN          reduce using rule 22 (stm -> exp NEWLINE .)
+    PASS            reduce using rule 22 (stm -> exp NEWLINE .)
+    NUMBER          reduce using rule 22 (stm -> exp NEWLINE .)
+    ID              reduce using rule 22 (stm -> exp NEWLINE .)
+    TRUE            reduce using rule 22 (stm -> exp NEWLINE .)
+    FALSE           reduce using rule 22 (stm -> exp NEWLINE .)
+    SELF            reduce using rule 22 (stm -> exp NEWLINE .)
+    DEDENT          reduce using rule 22 (stm -> exp NEWLINE .)
 
 
 state 75
 
-    (24) stm -> RETURN exp .
+    (23) stm -> WHILE exp . DP body
     (26) exp -> exp . IGUAL exp1
 
-    NEWLINE         reduce using rule 24 (stm -> RETURN exp .)
+    DP              shift and go to state 84
     IGUAL           shift and go to state 47
 
 
 state 76
+
+    (24) stm -> RETURN exp . NEWLINE
+    (26) exp -> exp . IGUAL exp1
+
+    NEWLINE         shift and go to state 85
+    IGUAL           shift and go to state 47
+
+
+state 77
+
+    (25) stm -> PASS NEWLINE .
+
+    WHILE           reduce using rule 25 (stm -> PASS NEWLINE .)
+    RETURN          reduce using rule 25 (stm -> PASS NEWLINE .)
+    PASS            reduce using rule 25 (stm -> PASS NEWLINE .)
+    NUMBER          reduce using rule 25 (stm -> PASS NEWLINE .)
+    ID              reduce using rule 25 (stm -> PASS NEWLINE .)
+    TRUE            reduce using rule 25 (stm -> PASS NEWLINE .)
+    FALSE           reduce using rule 25 (stm -> PASS NEWLINE .)
+    SELF            reduce using rule 25 (stm -> PASS NEWLINE .)
+    DEDENT          reduce using rule 25 (stm -> PASS NEWLINE .)
+
+
+state 78
 
     (17) sigparams -> ID COMMA . sigparams
     (15) sigparams -> . ID
@@ -1275,23 +1310,23 @@ state 76
     ID              shift and go to state 58
     SELF            shift and go to state 61
 
-    sigparams                      shift and go to state 84
+    sigparams                      shift and go to state 86
 
-state 77
+state 79
 
     (13) signature -> DEF ID LPAREN sigparams RPAREN . DP
 
-    DP              shift and go to state 85
+    DP              shift and go to state 87
 
 
-state 78
+state 80
 
     (14) signature -> DEF ID LPAREN RPAREN DP .
 
     NEWLINE         reduce using rule 14 (signature -> DEF ID LPAREN RPAREN DP .)
 
 
-state 79
+state 81
 
     (18) sigparams -> SELF COMMA . sigparams
     (15) sigparams -> . ID
@@ -1302,9 +1337,9 @@ state 79
     ID              shift and go to state 58
     SELF            shift and go to state 61
 
-    sigparams                      shift and go to state 86
+    sigparams                      shift and go to state 88
 
-state 80
+state 82
 
     (42) call -> ID LPAREN params RPAREN .
 
@@ -1321,7 +1356,7 @@ state 80
     DP              reduce using rule 42 (call -> ID LPAREN params RPAREN .)
 
 
-state 81
+state 83
 
     (44) params -> exp COMMA . params
     (44) params -> . exp COMMA params
@@ -1352,60 +1387,76 @@ state 81
     SELF            shift and go to state 41
 
     exp                            shift and go to state 66
-    params                         shift and go to state 87
+    params                         shift and go to state 89
     exp1                           shift and go to state 33
     exp2                           shift and go to state 34
     exp3                           shift and go to state 35
     exp4                           shift and go to state 36
     call                           shift and go to state 37
 
-state 82
-
-    (21) stms -> stm NEWLINE stms .
-
-    DEDENT          reduce using rule 21 (stms -> stm NEWLINE stms .)
-
-
-state 83
+state 84
 
     (23) stm -> WHILE exp DP . body
     (19) body -> . NEWLINE IDENT stms DEDENT
 
     NEWLINE         shift and go to state 27
 
-    body                           shift and go to state 88
+    body                           shift and go to state 90
 
-state 84
+state 85
+
+    (24) stm -> RETURN exp NEWLINE .
+
+    WHILE           reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    RETURN          reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    PASS            reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    NUMBER          reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    ID              reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    TRUE            reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    FALSE           reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    SELF            reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+    DEDENT          reduce using rule 24 (stm -> RETURN exp NEWLINE .)
+
+
+state 86
 
     (17) sigparams -> ID COMMA sigparams .
 
     RPAREN          reduce using rule 17 (sigparams -> ID COMMA sigparams .)
 
 
-state 85
+state 87
 
     (13) signature -> DEF ID LPAREN sigparams RPAREN DP .
 
     NEWLINE         reduce using rule 13 (signature -> DEF ID LPAREN sigparams RPAREN DP .)
 
 
-state 86
+state 88
 
     (18) sigparams -> SELF COMMA sigparams .
 
     RPAREN          reduce using rule 18 (sigparams -> SELF COMMA sigparams .)
 
 
-state 87
+state 89
 
     (44) params -> exp COMMA params .
 
     RPAREN          reduce using rule 44 (params -> exp COMMA params .)
 
 
-state 88
+state 90
 
     (23) stm -> WHILE exp DP body .
 
-    NEWLINE         reduce using rule 23 (stm -> WHILE exp DP body .)
+    WHILE           reduce using rule 23 (stm -> WHILE exp DP body .)
+    RETURN          reduce using rule 23 (stm -> WHILE exp DP body .)
+    PASS            reduce using rule 23 (stm -> WHILE exp DP body .)
+    NUMBER          reduce using rule 23 (stm -> WHILE exp DP body .)
+    ID              reduce using rule 23 (stm -> WHILE exp DP body .)
+    TRUE            reduce using rule 23 (stm -> WHILE exp DP body .)
+    FALSE           reduce using rule 23 (stm -> WHILE exp DP body .)
+    SELF            reduce using rule 23 (stm -> WHILE exp DP body .)
+    DEDENT          reduce using rule 23 (stm -> WHILE exp DP body .)
 

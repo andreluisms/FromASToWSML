@@ -23,12 +23,17 @@ lexer.input(data)
 parser = yacc.yacc()
 result = parser.parse()
 visitor = av.WsmlASTranslator() 
-result.accept(visitor)
 
 visitor2 = aw.ASinWSML()
-lexer = lex.lex()
-lexer.input(data2)
-# for l in lexer:
+lexer2 = lex.lex()
+lexer2.input(data2)
+parser2 = yacc.yacc()
+# for l in lexer2:
 #     print(l)
-result = parser.parse()
-result.accept(visitor2)
+result2 = parser2.parse()
+
+print("""wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
+namespace { _"http://ufs.br/ontologies#"}
+\nontology PythonAbstractSyntax\n""")
+result.accept(visitor)
+result2.accept(visitor2)
