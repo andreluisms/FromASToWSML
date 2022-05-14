@@ -1,17 +1,3 @@
-# Rascunho da gramatica
-# program → funcdecl | funcdecl program
-# funcdecl → signature body
-# signature → id id ( sigParams)
-# sigparams → ID ID | ID ID COMMA sigparams
-# body → { stms }
-# stms → stm  | stm  stms
-# stm → exp ;  | while ( exp ) body | return exp ;
-# call → id ( params )
-# exp → exp + exp | exp * exp | exp ^ exp | call | assign | num | id
-# call → id (params) | id ( )
-# params → exp, params | exp
-# assign → id = exp
-
 import ply.yacc as yacc
 from ExpressionLanguageLex import *
 import SintaxeAbstrata as sa
@@ -118,7 +104,9 @@ def p_stm4(p):
     ''' stm : PASS NEWLINE'''
     p[0] = sa.PassStm()
 
-
+def p_stm5(p):
+    ''' stm : FOR exp IN exp DP body '''
+    pass
 
 def p_exp_assign(p):
     ''' exp :    exp IGUAL exp1
@@ -162,6 +150,22 @@ def p_exp4_number(p):
     '''exp4 : NUMBER'''
     p[0] = sa.NumExp(p[1])
 
+
+def exp4_starExp(p):
+    ''' exp4 : startExp '''
+    p[0] = p[1]
+
+
+
+def p_exp4_star_id(p):
+    '''startExp : VEZES ID'''
+    p[0] = sa.StarIDExp(p[2])
+
+def p_exp4_dstart_id(p):
+    '''starExp : VEZES VEZES ID'''
+    p[0] = sa.DStarIDExp(p[3])
+
+
 def p_exp4_id(p):
     '''exp4 : ID'''
     p[0] = sa.IdExp(p[1])
@@ -170,6 +174,10 @@ def p_exp4_boolean(p):
     '''exp4 : TRUE
             | FALSE'''
     p[0] = sa.BooleanExp(p[1])
+
+def p_exp4_string(p):
+    ''' exp4 : STRING '''
+    pass
 
 def p_exp4_singleSelf(p):
     '''exp4 : SELF '''

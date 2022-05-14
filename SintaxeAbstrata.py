@@ -236,15 +236,25 @@ class NumExp(Expression):
     def accept(self, visitor):
         return visitor.visitNumExp(self)
 
-
 class IdExp(Expression):
     def __init__(self, ID):
         self.id = ID
     def accept(self, visitor):
         return visitor.visitIdExp(self)
 
-
 class SelfExp(Expression):
+    def __init__(self, ID):
+        self.id = ID
+    def accept(self, visitor):
+        return visitor.visitSelfExp(self)
+
+class StarIDExp(Expression):
+    def __init__(self, ID):
+        self.id = ID
+    def accept(self, visitor):
+        return visitor.visitSelfExp(self)
+
+class DStarIDExp(Expression):
     def __init__(self, ID):
         self.id = ID
     def accept(self, visitor):

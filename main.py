@@ -18,22 +18,34 @@ data2 = data2 + "\n"
 
 
 
-lexer = lex.lex()
-lexer.input(data)
-parser = yacc.yacc()
-result = parser.parse()
 visitor = av.WsmlASTranslator() 
+parserConcepts = yacc.yacc()
+lexerConcepts = lex.lex()
+lexerConcepts.input(data)
+tkconcepts = visitor.visitTokens(tokens)
+result = parserConcepts.parse()
 
-visitor2 = aw.ASinWSML()
-lexer2 = lex.lex()
-lexer2.input(data2)
-parser2 = yacc.yacc()
-# for l in lexer2:
+print(lex.Token)
+
+visitorInstances = aw.ASinWSML()
+lexerInstances = lex.lex()
+lexerInstances.input(data2)
+tkinsconcepts = visitor.visitTokInstances(lexerInstances)
+lexerInstances.input(data2)
+parserInstances = yacc.yacc()
+# for l in lexerInstances:
 #     print(l)
-result2 = parser2.parse()
+result2 = parserInstances.parse()
 
 print("""wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-rule"
 namespace { _"http://ufs.br/ontologies#"}
 \nontology PythonAbstractSyntax\n""")
+print(tkconcepts)
 result.accept(visitor)
-result2.accept(visitor2)
+
+print()
+print(tkinsconcepts)
+result2.accept(visitorInstances)
+
+
+print (tkinsconcepts)

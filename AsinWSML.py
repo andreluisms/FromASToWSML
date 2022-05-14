@@ -6,7 +6,14 @@ class ASinWSML(AbstractVisitor):
     # def __init__(self):
     #     self.printer = Visitor()
     counter = 0
-    number = 0    
+    number = 0  
+
+    def visitTokInstances (self, lex):
+        str = ''
+        for l in lex:
+            str+= "instance " + l.type.lower() + hex(id(l)) + " memberOf " + l.type
+            str+="\n   value hasValue \"" + l.value + "\"\n\n"
+        return str  
 
     def printInstance(self, obj):
         print("instance ", self.lstrType(obj),  self.hexAddr(obj),  ' memberOf ', self.strType(obj), sep='')

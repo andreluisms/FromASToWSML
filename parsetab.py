@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'CLASS COMMA DEDENT DEF DP FALSE ID IDENT IF IGUAL LBRACKETS LCHAV LESS LPAREN NEWLINE NUMBER P PASS POT PV RBRACKETS RCHAV RETURN RPAREN SELF SOMA STRING TRUE VEZES WHILE program : CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program :  CLASS ID LPAREN ID RPAREN DP classbodyprogram :   CLASS ID DP classbodyprogram :   CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody programprogram :   CLASS ID LPAREN ID RPAREN DP classbody programprogram :   CLASS ID DP classbody program  classbody : NEWLINE IDENT decls DEDENT  decls : decl decls \n               | decl  decl : funcdecl   decl : ID IGUAL exp  funcdecl : signature bodysignature : DEF ID LPAREN sigparams RPAREN DPsignature : DEF ID LPAREN RPAREN DP sigparams : ID\n                  | SELF\n                  | ID COMMA sigparams\n                  | SELF COMMA sigparams\n     body : NEWLINE IDENT stms DEDENT  stms : stm  stms : stm stms stm :  exp NEWLINE stm :  WHILE exp DP body  stm :  RETURN exp NEWLINE stm : PASS NEWLINE exp :    exp IGUAL exp1\n              | exp1exp1 : exp1 SOMA exp2\n         | exp2exp2 : exp2 VEZES exp3\n           | exp3exp3 : exp4 POT exp3\n            | exp4exp4 : callexp4 : NUMBERexp4 : IDexp4 : TRUE\n            | FALSEexp4 : SELF exp4 : ID P exp4 exp4 : SELF P exp4call : ID LPAREN params RPAREN\n            | ID LPAREN RPARENparams : exp COMMA params\n            | exp '
+_lr_signature = 'CLASS COMMA DEDENT DEF DP FALSE FOR ID IDENT IF IGUAL IN LBRACKETS LCHAV LESS LPAREN NEWLINE NUMBER P PASS POT PV RBRACKETS RCHAV RETURN RPAREN SELF SOMA STRING TRUE VEZES WHILE program : CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program :  CLASS ID LPAREN ID RPAREN DP classbodyprogram :   CLASS ID DP classbodyprogram :   CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody programprogram :   CLASS ID LPAREN ID RPAREN DP classbody programprogram :   CLASS ID DP classbody program  classbody : NEWLINE IDENT decls DEDENT  decls : decl decls \n               | decl  decl : funcdecl   decl : ID IGUAL exp  funcdecl : signature bodysignature : DEF ID LPAREN sigparams RPAREN DPsignature : DEF ID LPAREN RPAREN DP sigparams : ID\n                  | SELF\n                  | ID COMMA sigparams\n                  | SELF COMMA sigparams\n     body : NEWLINE IDENT stms DEDENT  stms : stm  stms : stm stms stm :  exp NEWLINE stm :  WHILE exp DP body  stm :  RETURN exp NEWLINE stm : PASS NEWLINE stm : FOR exp IN exp DP body  exp :    exp IGUAL exp1\n              | exp1exp1 : exp1 SOMA exp2\n         | exp2exp2 : exp2 VEZES exp3\n           | exp3exp3 : exp4 POT exp3\n            | exp4exp4 : callexp4 : NUMBERstartExp : VEZES IDstarExp : VEZES VEZES IDexp4 : IDexp4 : TRUE\n            | FALSE exp4 : STRING exp4 : SELF exp4 : ID P exp4 exp4 : SELF P exp4call : ID LPAREN params RPAREN\n            | ID LPAREN RPARENparams : exp COMMA params\n            | exp '
     
-_lr_action_items = {'CLASS':([0,7,22,23,44,],[2,2,2,-7,2,]),'$end':([1,7,11,22,23,30,44,62,],[0,-3,-6,-2,-7,-5,-1,-4,]),'ID':([2,4,9,12,16,17,20,25,26,31,32,33,34,35,36,37,38,39,40,41,42,43,45,46,47,48,49,50,51,53,55,56,63,65,67,68,69,70,71,72,74,77,78,81,82,83,85,90,],[3,6,13,18,18,-10,28,31,-12,-36,-11,-27,-29,-31,-33,-34,-35,-37,-38,-39,31,58,31,31,31,31,31,31,31,31,31,31,-40,-43,-26,-28,-30,-32,-41,-19,-22,-25,58,58,-42,31,-24,-23,]),'LPAREN':([3,28,31,],[4,43,46,]),'DP':([3,10,21,31,33,34,35,36,37,38,39,40,41,60,63,65,67,68,69,70,71,75,79,82,],[5,14,29,-36,-27,-29,-31,-33,-34,-35,-37,-38,-39,80,-40,-43,-26,-28,-30,-32,-41,84,87,-42,]),'NEWLINE':([5,14,19,29,31,33,34,35,36,37,38,39,40,41,54,57,63,65,67,68,69,70,71,76,80,82,84,87,],[8,8,27,8,-36,-27,-29,-31,-33,-34,-35,-37,-38,-39,74,77,-40,-43,-26,-28,-30,-32,-41,85,-14,-42,27,-13,]),'IGUAL':([6,18,31,32,33,34,35,36,37,38,39,40,41,54,63,65,66,67,68,69,70,71,75,76,82,],[9,25,-36,47,-27,-29,-31,-33,-34,-35,-37,-38,-39,47,-40,-43,47,-26,-28,-30,-32,-41,47,47,-42,]),'RPAREN':([6,13,31,33,34,35,36,37,38,39,40,41,43,46,58,59,61,63,64,65,66,67,68,69,70,71,82,86,88,89,],[10,21,-36,-27,-29,-31,-33,-34,-35,-37,-38,-39,60,65,-15,79,-16,-40,82,-43,-45,-26,-28,-30,-32,-41,-42,-17,-18,-44,]),'IDENT':([8,27,],[12,42,]),'DEF':([12,16,17,26,31,32,33,34,35,36,37,38,39,40,41,63,65,67,68,69,70,71,72,82,],[20,20,-10,-12,-36,-11,-27,-29,-31,-33,-34,-35,-37,-38,-39,-40,-43,-26,-28,-30,-32,-41,-19,-42,]),'DEDENT':([15,16,17,24,26,31,32,33,34,35,36,37,38,39,40,41,52,53,63,65,67,68,69,70,71,72,73,74,77,82,85,90,],[23,-9,-10,-8,-12,-36,-11,-27,-29,-31,-33,-34,-35,-37,-38,-39,72,-20,-40,-43,-26,-28,-30,-32,-41,-19,-21,-22,-25,-42,-24,-23,]),'NUMBER':([25,42,45,46,47,48,49,50,51,53,55,56,72,74,77,83,85,90,],[38,38,38,38,38,38,38,38,38,38,38,38,-19,-22,-25,38,-24,-23,]),'TRUE':([25,42,45,46,47,48,49,50,51,53,55,56,72,74,77,83,85,90,],[39,39,39,39,39,39,39,39,39,39,39,39,-19,-22,-25,39,-24,-23,]),'FALSE':([25,42,45,46,47,48,49,50,51,53,55,56,72,74,77,83,85,90,],[40,40,40,40,40,40,40,40,40,40,40,40,-19,-22,-25,40,-24,-23,]),'SELF':([25,42,43,45,46,47,48,49,50,51,53,55,56,72,74,77,78,81,83,85,90,],[41,41,61,41,41,41,41,41,41,41,41,41,41,-19,-22,-25,61,61,41,-24,-23,]),'POT':([31,36,37,38,39,40,41,63,65,71,82,],[-36,50,-34,-35,-37,-38,-39,-40,-43,-41,-42,]),'VEZES':([31,34,35,36,37,38,39,40,41,63,65,68,69,70,71,82,],[-36,49,-31,-33,-34,-35,-37,-38,-39,-40,-43,49,-30,-32,-41,-42,]),'SOMA':([31,33,34,35,36,37,38,39,40,41,63,65,67,68,69,70,71,82,],[-36,48,-29,-31,-33,-34,-35,-37,-38,-39,-40,-43,48,-28,-30,-32,-41,-42,]),'COMMA':([31,33,34,35,36,37,38,39,40,41,58,61,63,65,66,67,68,69,70,71,82,],[-36,-27,-29,-31,-33,-34,-35,-37,-38,-39,78,81,-40,-43,83,-26,-28,-30,-32,-41,-42,]),'P':([31,41,],[45,51,]),'WHILE':([42,53,72,74,77,85,90,],[55,55,-19,-22,-25,-24,-23,]),'RETURN':([42,53,72,74,77,85,90,],[56,56,-19,-22,-25,-24,-23,]),'PASS':([42,53,72,74,77,85,90,],[57,57,-19,-22,-25,-24,-23,]),}
+_lr_action_items = {'CLASS':([0,7,22,23,45,],[2,2,2,-7,2,]),'$end':([1,7,11,22,23,30,45,64,],[0,-3,-6,-2,-7,-5,-1,-4,]),'ID':([2,4,9,12,16,17,20,25,26,31,32,33,34,35,36,37,38,39,40,41,42,43,44,46,47,48,49,50,51,52,54,56,57,59,65,67,69,70,71,72,73,74,76,79,81,84,85,86,88,89,94,97,],[3,6,13,18,18,-10,28,31,-12,-39,-11,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,31,60,31,31,31,31,31,31,31,31,31,31,31,-44,-47,-27,-29,-31,-33,-45,-19,-22,-25,60,60,-46,31,-24,31,-23,-26,]),'LPAREN':([3,28,31,],[4,44,47,]),'DP':([3,10,21,31,33,34,35,36,37,38,39,40,41,42,62,65,67,69,70,71,72,73,77,82,85,95,],[5,14,29,-39,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,83,-44,-47,-27,-29,-31,-33,-45,87,91,-46,96,]),'NEWLINE':([5,14,19,29,31,33,34,35,36,37,38,39,40,41,42,55,58,65,67,69,70,71,72,73,78,83,85,87,91,96,],[8,8,27,8,-39,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,76,79,-44,-47,-27,-29,-31,-33,-45,88,-14,-46,27,-13,27,]),'IGUAL':([6,18,31,32,33,34,35,36,37,38,39,40,41,42,55,65,67,68,69,70,71,72,73,77,78,80,85,95,],[9,25,-39,48,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,48,-44,-47,48,-27,-29,-31,-33,-45,48,48,48,-46,48,]),'RPAREN':([6,13,31,33,34,35,36,37,38,39,40,41,42,44,47,60,61,63,65,66,67,68,69,70,71,72,73,85,90,92,93,],[10,21,-39,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,62,67,-15,82,-16,-44,85,-47,-49,-27,-29,-31,-33,-45,-46,-17,-18,-48,]),'IDENT':([8,27,],[12,43,]),'DEF':([12,16,17,26,31,32,33,34,35,36,37,38,39,40,41,42,65,67,69,70,71,72,73,74,85,],[20,20,-10,-12,-39,-11,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,-44,-47,-27,-29,-31,-33,-45,-19,-46,]),'DEDENT':([15,16,17,24,26,31,32,33,34,35,36,37,38,39,40,41,42,53,54,65,67,69,70,71,72,73,74,75,76,79,85,88,94,97,],[23,-9,-10,-8,-12,-39,-11,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,74,-20,-44,-47,-27,-29,-31,-33,-45,-19,-21,-22,-25,-46,-24,-23,-26,]),'NUMBER':([25,43,46,47,48,49,50,51,52,54,56,57,59,74,76,79,86,88,89,94,97,],[38,38,38,38,38,38,38,38,38,38,38,38,38,-19,-22,-25,38,-24,38,-23,-26,]),'TRUE':([25,43,46,47,48,49,50,51,52,54,56,57,59,74,76,79,86,88,89,94,97,],[39,39,39,39,39,39,39,39,39,39,39,39,39,-19,-22,-25,39,-24,39,-23,-26,]),'FALSE':([25,43,46,47,48,49,50,51,52,54,56,57,59,74,76,79,86,88,89,94,97,],[40,40,40,40,40,40,40,40,40,40,40,40,40,-19,-22,-25,40,-24,40,-23,-26,]),'STRING':([25,43,46,47,48,49,50,51,52,54,56,57,59,74,76,79,86,88,89,94,97,],[41,41,41,41,41,41,41,41,41,41,41,41,41,-19,-22,-25,41,-24,41,-23,-26,]),'SELF':([25,43,44,46,47,48,49,50,51,52,54,56,57,59,74,76,79,81,84,86,88,89,94,97,],[42,42,63,42,42,42,42,42,42,42,42,42,42,42,-19,-22,-25,63,63,42,-24,42,-23,-26,]),'POT':([31,36,37,38,39,40,41,42,65,67,73,85,],[-39,51,-35,-36,-40,-41,-42,-43,-44,-47,-45,-46,]),'VEZES':([31,34,35,36,37,38,39,40,41,42,65,67,70,71,72,73,85,],[-39,50,-32,-34,-35,-36,-40,-41,-42,-43,-44,-47,50,-31,-33,-45,-46,]),'SOMA':([31,33,34,35,36,37,38,39,40,41,42,65,67,69,70,71,72,73,85,],[-39,49,-30,-32,-34,-35,-36,-40,-41,-42,-43,-44,-47,49,-29,-31,-33,-45,-46,]),'COMMA':([31,33,34,35,36,37,38,39,40,41,42,60,63,65,67,68,69,70,71,72,73,85,],[-39,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,81,84,-44,-47,86,-27,-29,-31,-33,-45,-46,]),'IN':([31,33,34,35,36,37,38,39,40,41,42,65,67,69,70,71,72,73,80,85,],[-39,-28,-30,-32,-34,-35,-36,-40,-41,-42,-43,-44,-47,-27,-29,-31,-33,-45,89,-46,]),'P':([31,42,],[46,52,]),'WHILE':([43,54,74,76,79,88,94,97,],[56,56,-19,-22,-25,-24,-23,-26,]),'RETURN':([43,54,74,76,79,88,94,97,],[57,57,-19,-22,-25,-24,-23,-26,]),'PASS':([43,54,74,76,79,88,94,97,],[58,58,-19,-22,-25,-24,-23,-26,]),'FOR':([43,54,74,76,79,88,94,97,],[59,59,-19,-22,-25,-24,-23,-26,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,7,22,44,],[1,11,30,62,]),'classbody':([5,14,29,],[7,22,44,]),'decls':([12,16,],[15,24,]),'decl':([12,16,],[16,16,]),'funcdecl':([12,16,],[17,17,]),'signature':([12,16,],[19,19,]),'body':([19,84,],[26,90,]),'exp':([25,42,46,53,55,56,83,],[32,54,66,54,75,76,66,]),'exp1':([25,42,46,47,53,55,56,83,],[33,33,33,67,33,33,33,33,]),'exp2':([25,42,46,47,48,53,55,56,83,],[34,34,34,34,68,34,34,34,34,]),'exp3':([25,42,46,47,48,49,50,53,55,56,83,],[35,35,35,35,35,69,70,35,35,35,35,]),'exp4':([25,42,45,46,47,48,49,50,51,53,55,56,83,],[36,36,63,36,36,36,36,36,71,36,36,36,36,]),'call':([25,42,45,46,47,48,49,50,51,53,55,56,83,],[37,37,37,37,37,37,37,37,37,37,37,37,37,]),'stms':([42,53,],[52,73,]),'stm':([42,53,],[53,53,]),'sigparams':([43,78,81,],[59,86,88,]),'params':([46,83,],[64,89,]),}
+_lr_goto_items = {'program':([0,7,22,45,],[1,11,30,64,]),'classbody':([5,14,29,],[7,22,45,]),'decls':([12,16,],[15,24,]),'decl':([12,16,],[16,16,]),'funcdecl':([12,16,],[17,17,]),'signature':([12,16,],[19,19,]),'body':([19,87,96,],[26,94,97,]),'exp':([25,43,47,54,56,57,59,86,89,],[32,55,68,55,77,78,80,68,95,]),'exp1':([25,43,47,48,54,56,57,59,86,89,],[33,33,33,69,33,33,33,33,33,33,]),'exp2':([25,43,47,48,49,54,56,57,59,86,89,],[34,34,34,34,70,34,34,34,34,34,34,]),'exp3':([25,43,47,48,49,50,51,54,56,57,59,86,89,],[35,35,35,35,35,71,72,35,35,35,35,35,35,]),'exp4':([25,43,46,47,48,49,50,51,52,54,56,57,59,86,89,],[36,36,65,36,36,36,36,36,73,36,36,36,36,36,36,]),'call':([25,43,46,47,48,49,50,51,52,54,56,57,59,86,89,],[37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,]),'stms':([43,54,],[53,75,]),'stm':([43,54,],[54,54,]),'sigparams':([44,81,84,],[61,90,92,]),'params':([47,86,],[66,93,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,49 +27,53 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody','program',9,'p_program1','ExpressionLanguageParser.py',21),
-  ('program -> CLASS ID LPAREN ID RPAREN DP classbody','program',7,'p_program2','ExpressionLanguageParser.py',25),
-  ('program -> CLASS ID DP classbody','program',4,'p_program3','ExpressionLanguageParser.py',29),
-  ('program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program','program',10,'p_program4','ExpressionLanguageParser.py',33),
-  ('program -> CLASS ID LPAREN ID RPAREN DP classbody program','program',8,'p_program5','ExpressionLanguageParser.py',37),
-  ('program -> CLASS ID DP classbody program','program',5,'p_program6','ExpressionLanguageParser.py',41),
-  ('classbody -> NEWLINE IDENT decls DEDENT','classbody',4,'p_classbody','ExpressionLanguageParser.py',47),
-  ('decls -> decl decls','decls',2,'p_decls','ExpressionLanguageParser.py',51),
-  ('decls -> decl','decls',1,'p_decls','ExpressionLanguageParser.py',52),
-  ('decl -> funcdecl','decl',1,'p_decl1','ExpressionLanguageParser.py',60),
-  ('decl -> ID IGUAL exp','decl',3,'p_decl2','ExpressionLanguageParser.py',65),
-  ('funcdecl -> signature body','funcdecl',2,'p_funcdecl','ExpressionLanguageParser.py',69),
-  ('signature -> DEF ID LPAREN sigparams RPAREN DP','signature',6,'p_signature1','ExpressionLanguageParser.py',73),
-  ('signature -> DEF ID LPAREN RPAREN DP','signature',5,'p_signature2','ExpressionLanguageParser.py',77),
-  ('sigparams -> ID','sigparams',1,'p_sigparams','ExpressionLanguageParser.py',82),
-  ('sigparams -> SELF','sigparams',1,'p_sigparams','ExpressionLanguageParser.py',83),
-  ('sigparams -> ID COMMA sigparams','sigparams',3,'p_sigparams','ExpressionLanguageParser.py',84),
-  ('sigparams -> SELF COMMA sigparams','sigparams',3,'p_sigparams','ExpressionLanguageParser.py',85),
-  ('body -> NEWLINE IDENT stms DEDENT','body',4,'p_body','ExpressionLanguageParser.py',93),
-  ('stms -> stm','stms',1,'p_stms1','ExpressionLanguageParser.py',97),
-  ('stms -> stm stms','stms',2,'p_stms2','ExpressionLanguageParser.py',101),
-  ('stm -> exp NEWLINE','stm',2,'p_stm1','ExpressionLanguageParser.py',106),
-  ('stm -> WHILE exp DP body','stm',4,'p_stm2','ExpressionLanguageParser.py',110),
-  ('stm -> RETURN exp NEWLINE','stm',3,'p_stm3','ExpressionLanguageParser.py',114),
-  ('stm -> PASS NEWLINE','stm',2,'p_stm4','ExpressionLanguageParser.py',118),
-  ('exp -> exp IGUAL exp1','exp',3,'p_exp_assign','ExpressionLanguageParser.py',124),
-  ('exp -> exp1','exp',1,'p_exp_assign','ExpressionLanguageParser.py',125),
-  ('exp1 -> exp1 SOMA exp2','exp1',3,'p_exp1_soma','ExpressionLanguageParser.py',132),
-  ('exp1 -> exp2','exp1',1,'p_exp1_soma','ExpressionLanguageParser.py',133),
-  ('exp2 -> exp2 VEZES exp3','exp2',3,'p_exp2_vezes','ExpressionLanguageParser.py',141),
-  ('exp2 -> exp3','exp2',1,'p_exp2_vezes','ExpressionLanguageParser.py',142),
-  ('exp3 -> exp4 POT exp3','exp3',3,'p_exp3_pot','ExpressionLanguageParser.py',150),
-  ('exp3 -> exp4','exp3',1,'p_exp3_pot','ExpressionLanguageParser.py',151),
-  ('exp4 -> call','exp4',1,'p_exp4_call','ExpressionLanguageParser.py',158),
-  ('exp4 -> NUMBER','exp4',1,'p_exp4_number','ExpressionLanguageParser.py',162),
-  ('exp4 -> ID','exp4',1,'p_exp4_id','ExpressionLanguageParser.py',166),
-  ('exp4 -> TRUE','exp4',1,'p_exp4_boolean','ExpressionLanguageParser.py',170),
-  ('exp4 -> FALSE','exp4',1,'p_exp4_boolean','ExpressionLanguageParser.py',171),
-  ('exp4 -> SELF','exp4',1,'p_exp4_singleSelf','ExpressionLanguageParser.py',175),
-  ('exp4 -> ID P exp4','exp4',3,'p_exp4_compID','ExpressionLanguageParser.py',179),
-  ('exp4 -> SELF P exp4','exp4',3,'p_exp4_compSelf','ExpressionLanguageParser.py',183),
-  ('call -> ID LPAREN params RPAREN','call',4,'p_call_id_params','ExpressionLanguageParser.py',187),
-  ('call -> ID LPAREN RPAREN','call',3,'p_call_id_params','ExpressionLanguageParser.py',188),
-  ('params -> exp COMMA params','params',3,'p_params_ids','ExpressionLanguageParser.py',196),
-  ('params -> exp','params',1,'p_params_ids','ExpressionLanguageParser.py',197),
+  ('program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody','program',9,'p_program1','ExpressionLanguageParser.py',7),
+  ('program -> CLASS ID LPAREN ID RPAREN DP classbody','program',7,'p_program2','ExpressionLanguageParser.py',11),
+  ('program -> CLASS ID DP classbody','program',4,'p_program3','ExpressionLanguageParser.py',15),
+  ('program -> CLASS ID LPAREN ID IGUAL ID RPAREN DP classbody program','program',10,'p_program4','ExpressionLanguageParser.py',19),
+  ('program -> CLASS ID LPAREN ID RPAREN DP classbody program','program',8,'p_program5','ExpressionLanguageParser.py',23),
+  ('program -> CLASS ID DP classbody program','program',5,'p_program6','ExpressionLanguageParser.py',27),
+  ('classbody -> NEWLINE IDENT decls DEDENT','classbody',4,'p_classbody','ExpressionLanguageParser.py',33),
+  ('decls -> decl decls','decls',2,'p_decls','ExpressionLanguageParser.py',37),
+  ('decls -> decl','decls',1,'p_decls','ExpressionLanguageParser.py',38),
+  ('decl -> funcdecl','decl',1,'p_decl1','ExpressionLanguageParser.py',46),
+  ('decl -> ID IGUAL exp','decl',3,'p_decl2','ExpressionLanguageParser.py',51),
+  ('funcdecl -> signature body','funcdecl',2,'p_funcdecl','ExpressionLanguageParser.py',55),
+  ('signature -> DEF ID LPAREN sigparams RPAREN DP','signature',6,'p_signature1','ExpressionLanguageParser.py',59),
+  ('signature -> DEF ID LPAREN RPAREN DP','signature',5,'p_signature2','ExpressionLanguageParser.py',63),
+  ('sigparams -> ID','sigparams',1,'p_sigparams','ExpressionLanguageParser.py',68),
+  ('sigparams -> SELF','sigparams',1,'p_sigparams','ExpressionLanguageParser.py',69),
+  ('sigparams -> ID COMMA sigparams','sigparams',3,'p_sigparams','ExpressionLanguageParser.py',70),
+  ('sigparams -> SELF COMMA sigparams','sigparams',3,'p_sigparams','ExpressionLanguageParser.py',71),
+  ('body -> NEWLINE IDENT stms DEDENT','body',4,'p_body','ExpressionLanguageParser.py',79),
+  ('stms -> stm','stms',1,'p_stms1','ExpressionLanguageParser.py',83),
+  ('stms -> stm stms','stms',2,'p_stms2','ExpressionLanguageParser.py',87),
+  ('stm -> exp NEWLINE','stm',2,'p_stm1','ExpressionLanguageParser.py',92),
+  ('stm -> WHILE exp DP body','stm',4,'p_stm2','ExpressionLanguageParser.py',96),
+  ('stm -> RETURN exp NEWLINE','stm',3,'p_stm3','ExpressionLanguageParser.py',100),
+  ('stm -> PASS NEWLINE','stm',2,'p_stm4','ExpressionLanguageParser.py',104),
+  ('stm -> FOR exp IN exp DP body','stm',6,'p_stm5','ExpressionLanguageParser.py',108),
+  ('exp -> exp IGUAL exp1','exp',3,'p_exp_assign','ExpressionLanguageParser.py',112),
+  ('exp -> exp1','exp',1,'p_exp_assign','ExpressionLanguageParser.py',113),
+  ('exp1 -> exp1 SOMA exp2','exp1',3,'p_exp1_soma','ExpressionLanguageParser.py',120),
+  ('exp1 -> exp2','exp1',1,'p_exp1_soma','ExpressionLanguageParser.py',121),
+  ('exp2 -> exp2 VEZES exp3','exp2',3,'p_exp2_vezes','ExpressionLanguageParser.py',129),
+  ('exp2 -> exp3','exp2',1,'p_exp2_vezes','ExpressionLanguageParser.py',130),
+  ('exp3 -> exp4 POT exp3','exp3',3,'p_exp3_pot','ExpressionLanguageParser.py',138),
+  ('exp3 -> exp4','exp3',1,'p_exp3_pot','ExpressionLanguageParser.py',139),
+  ('exp4 -> call','exp4',1,'p_exp4_call','ExpressionLanguageParser.py',146),
+  ('exp4 -> NUMBER','exp4',1,'p_exp4_number','ExpressionLanguageParser.py',150),
+  ('startExp -> VEZES ID','startExp',2,'p_exp4_star_id','ExpressionLanguageParser.py',161),
+  ('starExp -> VEZES VEZES ID','starExp',3,'p_exp4_dstart_id','ExpressionLanguageParser.py',165),
+  ('exp4 -> ID','exp4',1,'p_exp4_id','ExpressionLanguageParser.py',170),
+  ('exp4 -> TRUE','exp4',1,'p_exp4_boolean','ExpressionLanguageParser.py',174),
+  ('exp4 -> FALSE','exp4',1,'p_exp4_boolean','ExpressionLanguageParser.py',175),
+  ('exp4 -> STRING','exp4',1,'p_exp4_string','ExpressionLanguageParser.py',179),
+  ('exp4 -> SELF','exp4',1,'p_exp4_singleSelf','ExpressionLanguageParser.py',183),
+  ('exp4 -> ID P exp4','exp4',3,'p_exp4_compID','ExpressionLanguageParser.py',187),
+  ('exp4 -> SELF P exp4','exp4',3,'p_exp4_compSelf','ExpressionLanguageParser.py',191),
+  ('call -> ID LPAREN params RPAREN','call',4,'p_call_id_params','ExpressionLanguageParser.py',195),
+  ('call -> ID LPAREN RPAREN','call',3,'p_call_id_params','ExpressionLanguageParser.py',196),
+  ('params -> exp COMMA params','params',3,'p_params_ids','ExpressionLanguageParser.py',204),
+  ('params -> exp','params',1,'p_params_ids','ExpressionLanguageParser.py',205),
 ]

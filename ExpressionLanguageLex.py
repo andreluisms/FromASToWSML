@@ -30,7 +30,9 @@ reservadas = {
    'class'  : 'CLASS',
    'def'    : 'DEF',
    'pass': 'PASS',
-   'self': 'SELF'
+   'self': 'SELF',
+   'for' : 'FOR',
+   'in' : 'IN'
 }
 tokens = ['COMMA', 'SOMA', 'ID', 'NUMBER', 'VEZES', 'POT', 'LPAREN',
           'RPAREN', 'IGUAL', 'LCHAV', 'RCHAV', 'PV', 'P','DP', 'IDENT', 'DEDENT', 'STRING', 'LBRACKETS', 'RBRACKETS',

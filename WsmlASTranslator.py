@@ -7,6 +7,14 @@ class WsmlASTranslator(AbstractVisitor):
     #     self.printer = Visitor()
     counter = 0
     
+    def visitTokens(self, tokens):
+        str = ''
+        for l in tokens:
+            str+="concept " + l
+            str+="\n   value ofType _string\n\n"
+        return str
+
+
     def prTab(self):
         for a in range(self.counter):
             print(' ', end='')
